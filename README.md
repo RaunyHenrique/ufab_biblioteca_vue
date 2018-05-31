@@ -420,11 +420,11 @@ As you may already read, the app is automatically deployed to Heroku on https://
 
 The project makes use of the nice Heroku Pipelines feature, where we do get a full Continuous Delivery pipeline with nearly no effort:
 
-![heroku-pipeline](heroku-pipeline.png)
+![heroku-pipeline](../../Desktop/spring-boot-vuejs-master/heroku-pipeline.png)
 
 And with the help of super cool `Automatic deploys`, we have our TravisCI build our app after every push to master - and with the checkbox set to `Wait for CI to pass before deploy` - the app gets also automatically deployed to Heroku - but only, if the TravisCI (and Coveralls...) build succeeded:
 
-![heroku-automatic-deploys](heroku-automatic-deploys.png)
+![heroku-automatic-deploys](../../Desktop/spring-boot-vuejs-master/heroku-automatic-deploys.png)
 
 You only have to connect your Heroku app to GitHub, activate Automatic deploys and set the named checkbox. That´s everything!
 

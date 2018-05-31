@@ -1,47 +1,58 @@
 <template>
-  <div class="hello">
-    <img src="./../assets/spring-boot-vuejs-logo.png">
-    <h1>{{ msg }}</h1>
-    <h2>See the sources here: </h2>
-    <ul>
-      <li><a href="https://github.com/jonashackt/spring-boot-vuejs" target="_blank">github.com/jonashackt/spring-boot-vuejs</a></li>
-    </ul>
-    <h3>This site contains more stuff :)</h3>
-    <ul>
-      <li>HowTo call REST-Services:</li>
-      <li><router-link :to="{ name: 'Service' }" exact target="_blank">/callservice</router-link></li>
-      <li>HowTo to play around with Bootstrap UI components:</li>
-      <li><router-link :to="{ name: 'Bootstrap' }" exact target="_blank">/bootstrap</router-link></li>
-      <li>HowTo to interact with the Spring Boot database backend:</li>
-      <li><router-link :to="{ name: 'User' }" exact target="_blank">/user</router-link></li>
-    </ul>
+
+  <div>
+    <b-alert show>Default Alert</b-alert>
+
+    <b-alert variant="success" show>Success Alert</b-alert>
+
+    <b-alert variant="danger"
+             dismissible
+             :show="showDismissibleAlert"
+             @dismissed="showDismissibleAlert=false">
+      Dismissible Alert!
+    </b-alert>
+
+    <b-alert :show="dismissCountDown"
+             dismissible
+             variant="warning"
+             @dismissed="dismissCountDown=0"
+             @dismiss-count-down="countDownChanged">
+      <p>This alert will dismiss after {{dismissCountDown}} seconds...</p>
+      <b-progress variant="warning"
+                  :max="dismissSecs"
+                  :value="dismissCountDown"
+                  height="4px">
+      </b-progress>
+    </b-alert>
+
+    <b-btn @click="showAlert" variant="info" class="m-1">
+      Show alert with count-down timer
+    </b-btn>
+    <b-btn @click="showDismissibleAlert=true" variant="info" class="m-1">
+      Show dismissible alert ({{showDismissibleAlert?'visible':'hidden'}})
+    </b-btn>
   </div>
+
 </template>
 
 <script>
-
-import { AXIOS } from './http-common'
 
 export default {
   name: 'hello',
 
   data () {
     return {
-      posts: [],
-      errors: []
+      dismissSecs: 10,
+      dismissCountDown: 0,
+      showDismissibleAlert: false
     }
   },
   methods: {
-    // Fetches posts when the component is created.
-    callRestService () {
-      AXIOS.get(`hello`)
-        .then(response => {
-          // JSON responses are automatically parsed.
-          this.posts = response.data
-        })
-        .catch(e => {
-          this.errors.push(e)
-        })
+    countDownChanged (dismissCountDown) {
+      this.dismissCountDown = dismissCountDown
+    },
+    showAlert () {
+      this.dismissCountDown = this.dismissSecs
     }
   }
 }

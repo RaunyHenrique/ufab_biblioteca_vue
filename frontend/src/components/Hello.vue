@@ -19,12 +19,29 @@
 </template>
 
 <script>
+
+import { AXIOS } from './http-common'
+
 export default {
   name: 'hello',
 
   data () {
     return {
-      msg: 'Welcome to your Vue.js powered Spring Boot App'
+      posts: [],
+      errors: []
+    }
+  },
+  methods: {
+    // Fetches posts when the component is created.
+    callRestService () {
+      AXIOS.get(`hello`)
+        .then(response => {
+          // JSON responses are automatically parsed.
+          this.posts = response.data
+        })
+        .catch(e => {
+          this.errors.push(e)
+        })
     }
   }
 }

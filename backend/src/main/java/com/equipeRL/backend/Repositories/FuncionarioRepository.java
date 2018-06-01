@@ -1,6 +1,7 @@
 package com.equipeRL.backend.Repositories;
 
 import com.equipeRL.backend.Models.Funcionario;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -12,7 +13,7 @@ import java.util.Optional;
  *
  */
 @RepositoryRestResource
-public interface FuncionarioRepository extends PagingAndSortingRepository<Funcionario, Long> {
+public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> {
 	
 	public Optional<Funcionario> findByNomeIgnoreCase(String nome);
 	public Optional<Funcionario> findByLoginIgnoreCase(String login);

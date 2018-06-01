@@ -5,7 +5,9 @@ import com.equipeRL.backend.Models.enums.Tipo_nivel;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.sql.Date;
+import java.util.Set;
 
 /**
  * Essa classe � utilizada como modelo para um objeto do tipo Aluno;
@@ -50,7 +52,6 @@ public class Aluno extends Usuario {
 	 * @param cpf, n�mero do CPF do aluno
 	 * @param rg, n�mero do RG do aluno
 	 * @param naturalidade, cidade natal do aluno
-	 * @param nomeCompleto, nome completo do aluno
 	 * @param nomeMae, nome completo da m�e do aluno
 	 * @param endereco, endere�o do aluno
 	 * @param telefone, telefone para contato do aluno
@@ -59,24 +60,25 @@ public class Aluno extends Usuario {
 	 * @param email, endere�o de email do aluno
 	 * @param anoIngresso, o ano de ingresso do aluno no curso
 	 * @param periodoIngresso, o per�odo de ingresso do aluno no curso
-	 * @param senhaAcesso, a senha de acesso ao sistema do aluno
 	 */
-	public Aluno(String matricula, String cpf, String rg, String naturalidade, String nomeCompleto, String nomeMae,
-                 String endereco, String telefone, Curso curso, Tipo_nivel nivel, String email, Date anoIngresso,
-                 int periodoIngresso, String senhaAcesso, String senhaConfirmacao) {
-		super(cpf, nomeCompleto, rg, naturalidade, endereco, telefone, email, senhaAcesso,senhaConfirmacao);
-		setMatricula(matricula);
-		setNomeMae(nomeMae);
-		setCurso(curso);
-		setNivel(nivel);
-		setAnoIngresso(anoIngresso);
-		setPeriodoIngresso(periodoIngresso);
+
+	public Aluno(@NotEmpty(message = " CPF é obrigatório") String cpf, @NotEmpty(message = " O nome é obrigatório") String nome, @NotEmpty(message = " RG é obrigatório") String rg, @NotEmpty(message = " A naturalidade é obrigatória") String naturalidade, @NotEmpty(message = " O endereço é obrigatório") String endereco, @NotEmpty(message = " O telefone é obrigatório") String telefone, @Size(min = 5, max = 45, message = " O tamanho do email deve estar entre 5 e 20") @NotEmpty(message = " O email é obrigatório") String email, @NotEmpty(message = " A senha é obrigatória") String senha, String confirmacaoSenha, Set<Permissao> permissoes, String matricula, @NotEmpty(message = " Nome da mãe é obrigatório") String nomeMae, @NotNull(message = " Curso é obrigatório") Curso curso, @NotNull(message = " Nivel do aluno é obrigatório") Tipo_nivel nivel, @NotNull(message = " Data de ingresso é obrigatório") Date anoIngresso, @NotNull(message = " Periodo de ingresso é obrigatório") int periodoIngresso) {
+		super(cpf, nome, rg, naturalidade, endereco, telefone, email, senha, confirmacaoSenha, permissoes);
+		this.matricula = matricula;
+		this.nomeMae = nomeMae;
+		this.curso = curso;
+		this.nivel = nivel;
+		this.anoIngresso = anoIngresso;
+		this.periodoIngresso = periodoIngresso;
 	}
+
 	/**
 	 * M�todo construtor da classe Aluno (utilizado como objeto que ser� passado por par�metro durante a inser��o de um objeto do tipo Aluno no Banco de Dados
 	 */
 	public Aluno(Aluno aluno) {
-		super(aluno.getCpf(), aluno.getNome(), aluno.getRg(), aluno.getNaturalidade(), aluno.getEndereco(), aluno.getTelefone(), aluno.getEmail(), aluno.getSenha(),aluno.getConfirmacaoSenha());
+
+		super(aluno.getCpf(), aluno.getNome(), aluno.getRg(), aluno.getNaturalidade(), aluno.getEndereco(), aluno.getTelefone(), aluno.getEmail(), aluno.getSenha(), aluno.getConfirmacaoSenha(), aluno.getPermissoes());
+
 		setId(aluno.getId());
 		setNomeMae(aluno.getNomeMae());
 		setCurso(new Curso(aluno.getCurso()));
@@ -84,9 +86,7 @@ public class Aluno extends Usuario {
 		setAnoIngresso(aluno.getAnoIngresso());
 		setPeriodoIngresso(aluno.getPeriodoIngresso());
 		setMatricula(aluno.getMatricula());
-		setSenha(aluno.getSenha());
-		setConfirmacaoSenha(aluno.getConfirmacaoSenha());
-		
+
 	}
 	
 	public String getMatricula() {
@@ -127,7 +127,7 @@ public class Aluno extends Usuario {
 	public void setCurso(Curso curso) {
 		this.curso = curso;
 	}
-	
-	
+
+
 }
 

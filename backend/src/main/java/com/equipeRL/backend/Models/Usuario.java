@@ -16,7 +16,8 @@ import java.util.Set;
  * Essa classe � a super classe que os usuarios do sistema herdam seus m�todos e atributos, que s�o comuns a todos.
  * @author EquipeACL
  */
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Usuario {
 
 	@Id
@@ -52,20 +53,16 @@ public abstract class Usuario {
 	protected String confirmacaoSenha;
 
 
-	public Set<Grupo> getGrupos() {
-		return grupos;
+	public Set<Permissao> getPermissoes() {
+		return permissoes;
 	}
 
-	public void setGrupos(Set<Grupo> grupos) {
-		this.grupos = grupos;
+	public void setPermissoes(Set<Permissao> permissoes) {
+		this.permissoes = permissoes;
 	}
 
-	@Fetch(FetchMode.SELECT)
-	@Size(min=1,message = "Selecione pelo menos um grupo")
-	@ManyToMany(fetch=FetchType.EAGER)
-	@JoinTable(name = "aluno_has_grupo",joinColumns = @JoinColumn(name = "aluno_id")
-												, inverseJoinColumns = @JoinColumn(name = "grupo_id"))
-	private Set <Grupo> grupos;
+	@OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	private Set <Permissao> permissoes;
 
 
 /*	@NotNull(message = "Selecione pelo menos um grupo")
@@ -82,7 +79,20 @@ public abstract class Usuario {
 
 	}
 
-	/**
+    public Usuario(@NotEmpty(message = " CPF é obrigatório") String cpf, @NotEmpty(message = " O nome é obrigatório") String nome, @NotEmpty(message = " RG é obrigatório") String rg, @NotEmpty(message = " A naturalidade é obrigatória") String naturalidade, @NotEmpty(message = " O endereço é obrigatório") String endereco, @NotEmpty(message = " O telefone é obrigatório") String telefone, @Size(min = 5, max = 45, message = " O tamanho do email deve estar entre 5 e 20") @NotEmpty(message = " O email é obrigatório") String email, @NotEmpty(message = " A senha é obrigatória") String senha, String confirmacaoSenha, Set<Permissao> permissoes) {
+        this.cpf = cpf;
+        this.nome = nome;
+        this.rg = rg;
+        this.naturalidade = naturalidade;
+        this.endereco = endereco;
+        this.telefone = telefone;
+        this.email = email;
+        this.senha = senha;
+        this.confirmacaoSenha = confirmacaoSenha;
+        this.permissoes = permissoes;
+    }
+
+    /**
 	 * M�todo Construtor da classe Usu�rio
 	 * @param cpf, n�mero do cpf do Usu�rio
 	 * @param nome, nome completo do Usu�rio
@@ -93,18 +103,8 @@ public abstract class Usuario {
 	 * @param email, endere�o de email do Usu�rio
 	 * @param senha, senha de acesso ao sistema do Usu�rio
 	 */
-	public Usuario(String cpf, String nome, String rg, String naturalidade, String endereco, String telefone,
-                   String email, String senha, String confirmacaoSenha) {
-		setCpf(cpf);
-		setNome(nome);
-		setRg(rg);
-		setNaturalidade(naturalidade);
-		setEndereco(endereco);
-		setTelefone(telefone);
-		setEmail(email);
-		setSenha(senha);
-		setConfirmacaoSenha(confirmacaoSenha);
-	}
+
+
 
 	@Override
 	public boolean equals(Object o) {
@@ -194,9 +194,5 @@ public abstract class Usuario {
 	public void setConfirmacaoSenha(String confirmacaoSenha) {
 		this.confirmacaoSenha = confirmacaoSenha;
 	}
-
-
-
-	
 
 }

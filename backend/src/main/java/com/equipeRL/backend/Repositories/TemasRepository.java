@@ -1,6 +1,7 @@
 package com.equipeRL.backend.Repositories;
 
 import com.equipeRL.backend.Models.Tema;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -12,7 +13,7 @@ import java.util.Optional;
  *
  */
 @RepositoryRestResource
-public interface TemasRepository extends PagingAndSortingRepository<Tema, Long> {
+public interface TemasRepository extends JpaRepository<Tema, Long> {
 	
 	public Optional<Tema> findByNomeIgnoreCase(String nome);
 

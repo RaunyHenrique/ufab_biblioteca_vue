@@ -1,7 +1,7 @@
 package com.equipeRL.backend.Repositories;
 
 import com.equipeRL.backend.Models.AreaConhecimento;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.util.Optional;
@@ -12,7 +12,7 @@ import java.util.Optional;
  *
  */
 @RepositoryRestResource
-public interface AreasConhecimentoRepository extends PagingAndSortingRepository<AreaConhecimento, Long> {
+public interface AreasConhecimentoRepository extends JpaRepository<AreaConhecimento, Long> {
 
 	public Optional <AreaConhecimento> findByNomeIgnoreCase(String nome);
 

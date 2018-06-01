@@ -3,9 +3,7 @@ package com.equipeRL.backend.Models.acervo;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -17,7 +15,8 @@ import java.util.Date;
  * @author EquipeACL
  */
 
-
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class ItemAcervo {
 	
 	@Id

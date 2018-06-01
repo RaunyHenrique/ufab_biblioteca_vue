@@ -1,7 +1,7 @@
 package com.equipeRL.backend.Repositories;
 
 import com.equipeRL.backend.Models.Autor;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.util.Optional;
@@ -12,7 +12,7 @@ import java.util.Optional;
  *
  */
 @RepositoryRestResource
-public interface AutoresRepository extends PagingAndSortingRepository<Autor, Long> {
+public interface AutoresRepository extends JpaRepository<Autor, Long> {
 
 	public Optional <Autor> findByNomeIgnoreCase(String nome);
 }

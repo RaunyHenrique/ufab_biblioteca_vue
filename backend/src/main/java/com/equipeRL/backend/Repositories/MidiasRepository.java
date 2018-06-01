@@ -1,6 +1,7 @@
 package com.equipeRL.backend.Repositories;
 
 import com.equipeRL.backend.Models.acervo.MidiasEletronicas;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -12,7 +13,7 @@ import java.util.Optional;
  *
  */
 @RepositoryRestResource
-public interface MidiasRepository extends PagingAndSortingRepository<MidiasEletronicas, Long> {
+public interface MidiasRepository extends JpaRepository<MidiasEletronicas, Long> {
 	
 	public Optional <MidiasEletronicas> findByTituloIgnoreCase(String titulo);
 

@@ -2,6 +2,7 @@ package com.equipeRL.backend.Repositories;
 
 
 import com.equipeRL.backend.Models.Estado;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -11,6 +12,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  *
  */
 @RepositoryRestResource
-public interface EstadosRepository extends PagingAndSortingRepository<Estado, Long> {
+public interface EstadosRepository extends JpaRepository<Estado, Long> {
 	
 }

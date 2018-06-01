@@ -1,7 +1,7 @@
 package com.equipeRL.backend.Repositories;
 
 import com.equipeRL.backend.Models.Aluno;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.util.Optional;
@@ -12,9 +12,10 @@ import java.util.Optional;
  *
  */
 @RepositoryRestResource
-public interface AlunosRepository extends PagingAndSortingRepository<Aluno,Long> {
+public interface AlunosRepository extends JpaRepository<Aluno, Long> {
 	
 	public Optional <Aluno> findByNomeIgnoreCase(String nome);
 	public Optional <Aluno> findByMatriculaIgnoreCase(String matricula);
 	public Optional <Aluno> findByCpfIgnoreCase(String cpf);
+
 }

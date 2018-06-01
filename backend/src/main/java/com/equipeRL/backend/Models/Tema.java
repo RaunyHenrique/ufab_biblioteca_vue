@@ -27,9 +27,7 @@ public class Tema implements IFDependencia {
 	@JoinColumn(name = "areaconhecimento_id",nullable=false)
 	@NotNull(message=" Area é obrigatório.")
 	private AreaConhecimento area;
-	
-	private String areaConhecimento_id;
-	
+
 	/**
 	 * Método construtor da classe Tema
 	 * Construtor vazio (utilizado para criar um objeto do tipo Tema sem parametros definidos)
@@ -78,17 +76,6 @@ public class Tema implements IFDependencia {
 
 	public void setArea(AreaConhecimento area) {
 		this.area = area;
-	}	
-
-	public String getAreaConhecimento_id() {
-		return areaConhecimento_id;
-	}
-
-	public void setAreaConhecimento_id(String areaConhecimento_id) {
-		this.areaConhecimento_id = areaConhecimento_id;
-		AreaConhecimento a = new AreaConhecimento();
-		a.setId(Long.parseLong(areaConhecimento_id));
-		setArea(a);
 	}
 
 	public boolean validaDependencia() {

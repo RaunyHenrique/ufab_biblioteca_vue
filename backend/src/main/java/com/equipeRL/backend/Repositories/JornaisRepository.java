@@ -1,6 +1,7 @@
 package com.equipeRL.backend.Repositories;
 
 import com.equipeRL.backend.Models.acervo.Jornal;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -12,7 +13,7 @@ import java.util.Optional;
  *
  */
 @RepositoryRestResource
-public interface JornaisRepository extends PagingAndSortingRepository<Jornal, Long> {
+public interface JornaisRepository extends JpaRepository<Jornal, Long> {
 	public Optional <Jornal> findByTituloIgnoreCase(String titulo);
 
 }

@@ -34,24 +34,24 @@ public class AlunosController {
      * @return mv, que é um objeto ModelAndView que contém os parâmetros que foram adicionados para exibir na view.
      */
 
-    @GetMapping("/")
-    public ResponseEntity<List<Aluno>> listarTodos() {
-
-        try {
-
-//            ModelAndView mv = new ModelAndView("aluno/CadastroAluno");
-//            mv.addObject("cursos", cursos.findAll());
-//            mv.addObject("niveis", Tipo_nivel.values());
-//        mv.addObject("grupos", cadastroGrupoService.buscaAluno());
-
-            List<Aluno> allAlunos = alunoService.getAllAlunos();
-
-            return new ResponseEntity<>(allAlunos, HttpStatus.OK);
-
-        } catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-    }
+//    @GetMapping("/")
+//    public ResponseEntity<List<Aluno>> listarTodos() {
+//
+//        try {
+//
+////            ModelAndView mv = new ModelAndView("aluno/CadastroAluno");
+////            mv.addObject("cursos", cursos.findAll());
+////            mv.addObject("niveis", Tipo_nivel.values());
+////        mv.addObject("grupos", cadastroGrupoService.buscaAluno());
+//
+//            List<Aluno> allAlunos = alunoService.getAllAlunos();
+//
+//            return new ResponseEntity<>(allAlunos, HttpStatus.OK);
+//
+//        } catch (Exception e){
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//
+//    }
 
 }

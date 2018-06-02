@@ -1,13 +1,13 @@
 package com.equipeRL.backend.Models;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -17,8 +17,9 @@ import java.util.Set;
  * @author EquipeACL
  */
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Usuario {
+public class Usuario implements UserDetails {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -94,17 +95,7 @@ public abstract class Usuario {
 
     /**
 	 * M�todo Construtor da classe Usu�rio
-	 * @param cpf, n�mero do cpf do Usu�rio
-	 * @param nome, nome completo do Usu�rio
-	 * @param rg, numero do rg do Usu�rio
-	 * @param naturalidade, cidade natal do Usu�rio
-	 * @param endereco, endere�o completo do Usu�rio
-	 * @param telefone, telefone de contato do Usu�rio
-	 * @param email, endere�o de email do Usu�rio
-	 * @param senha, senha de acesso ao sistema do Usu�rio
 	 */
-
-
 
 	@Override
 	public boolean equals(Object o) {
@@ -193,6 +184,51 @@ public abstract class Usuario {
 
 	public void setConfirmacaoSenha(String confirmacaoSenha) {
 		this.confirmacaoSenha = confirmacaoSenha;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+
+		List<GrantedAuthority> permissoes = new ArrayList<GrantedAuthority>();
+
+		for (Permissao permissao : getPermissoes()) {
+
+			permissoes.add(new SimpleGrantedAuthority(permissao.getNome()));
+
+		}
+
+		return permissoes;
+
+	}
+
+	@Override
+	public String getPassword() {
+		return this.senha;
+	}
+
+	@Override
+	public String getUsername() {
+		return this.email;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
 	}
 
 }

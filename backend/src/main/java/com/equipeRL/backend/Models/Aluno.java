@@ -5,9 +5,8 @@ import com.equipeRL.backend.Models.enums.Tipo_nivel;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.sql.Date;
-import java.util.Set;
+import java.util.Objects;
 
 /**
  * Essa classe � utilizada como modelo para um objeto do tipo Aluno;
@@ -17,12 +16,43 @@ import java.util.Set;
  */
 @Entity
 @Table(name="aluno")
-public class Aluno extends Usuario {
+public class Aluno {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@NotNull
+	@NotEmpty
+	@Column(unique = true)
+	private String rg;
+
+	@NotNull
+	@NotEmpty
+	@Column(unique = true)
+	private String cpf;
+
+	@NotNull
+	@NotEmpty
+	private String naturalidade;
+
+	@NotNull
+	@NotEmpty
+	private String nome;
 
 	private String matricula;
 
 	@NotEmpty(message=" Nome da mãe é obrigatório")
 	private String nomeMae;
+
+	@NotNull
+	@NotEmpty
+	private String endereco;
+
+	@NotNull
+	@NotEmpty
+	@Column(unique = true)
+	private String telefone;
 
 	@NotNull(message=" Curso é obrigatório")
 	@ManyToOne(cascade=CascadeType.MERGE)
@@ -43,91 +73,150 @@ public class Aluno extends Usuario {
 	 * M�todo construtor da classe Aluno
 	 * Construtor vazio (utilizado para criar um objeto do tipo Aluno sem par�metros definidos)
 	 */
-	public Aluno() {
+	public Aluno() {}
 
-	}
-	/**
-	 * M�todo construtor da classe Aluno (utilizado para instanciar objetos durante a busca de um objeto do tipo Aluno no Banco de Dados)
-	 * @param matricula, matr�cula do aluno
-	 * @param cpf, n�mero do CPF do aluno
-	 * @param rg, n�mero do RG do aluno
-	 * @param naturalidade, cidade natal do aluno
-	 * @param nomeMae, nome completo da m�e do aluno
-	 * @param endereco, endere�o do aluno
-	 * @param telefone, telefone para contato do aluno
-	 * @param curso, Objeto do tipo Curso referente ao curso que o aluno ingressou
-	 * @param nivel, Enum do nivel do aluno (se � graduando, mestrando, doutorando ou p�s-doutorando)
-	 * @param email, endere�o de email do aluno
-	 * @param anoIngresso, o ano de ingresso do aluno no curso
-	 * @param periodoIngresso, o per�odo de ingresso do aluno no curso
-	 */
-
-	public Aluno(@NotEmpty(message = " CPF é obrigatório") String cpf, @NotEmpty(message = " O nome é obrigatório") String nome, @NotEmpty(message = " RG é obrigatório") String rg, @NotEmpty(message = " A naturalidade é obrigatória") String naturalidade, @NotEmpty(message = " O endereço é obrigatório") String endereco, @NotEmpty(message = " O telefone é obrigatório") String telefone, @Size(min = 5, max = 45, message = " O tamanho do email deve estar entre 5 e 20") @NotEmpty(message = " O email é obrigatório") String email, @NotEmpty(message = " A senha é obrigatória") String senha, String confirmacaoSenha, Set<Permissao> permissoes, String matricula, @NotEmpty(message = " Nome da mãe é obrigatório") String nomeMae, @NotNull(message = " Curso é obrigatório") Curso curso, @NotNull(message = " Nivel do aluno é obrigatório") Tipo_nivel nivel, @NotNull(message = " Data de ingresso é obrigatório") Date anoIngresso, @NotNull(message = " Periodo de ingresso é obrigatório") int periodoIngresso) {
-		super(cpf, nome, rg, naturalidade, endereco, telefone, email, senha, confirmacaoSenha, permissoes);
+	public Aluno(@NotNull @NotEmpty String rg, @NotNull @NotEmpty String cpf, @NotNull @NotEmpty String naturalidade, @NotNull @NotEmpty String nome, String matricula, @NotEmpty(message = " Nome da mãe é obrigatório") String nomeMae, @NotNull @NotEmpty String endereco, @NotNull @NotEmpty String telefone, @NotNull(message = " Curso é obrigatório") Curso curso, @NotNull(message = " Nivel do aluno é obrigatório") Tipo_nivel nivel, @NotNull(message = " Data de ingresso é obrigatório") Date anoIngresso, @NotNull(message = " Periodo de ingresso é obrigatório") int periodoIngresso) {
+		this.rg = rg;
+		this.cpf = cpf;
+		this.naturalidade = naturalidade;
+		this.nome = nome;
 		this.matricula = matricula;
 		this.nomeMae = nomeMae;
+		this.endereco = endereco;
+		this.telefone = telefone;
 		this.curso = curso;
 		this.nivel = nivel;
 		this.anoIngresso = anoIngresso;
 		this.periodoIngresso = periodoIngresso;
 	}
 
-	/**
-	 * M�todo construtor da classe Aluno (utilizado como objeto que ser� passado por par�metro durante a inser��o de um objeto do tipo Aluno no Banco de Dados
-	 */
-	public Aluno(Aluno aluno) {
-
-		super(aluno.getCpf(), aluno.getNome(), aluno.getRg(), aluno.getNaturalidade(), aluno.getEndereco(), aluno.getTelefone(), aluno.getEmail(), aluno.getSenha(), aluno.getConfirmacaoSenha(), aluno.getPermissoes());
-
-		setId(aluno.getId());
-		setNomeMae(aluno.getNomeMae());
-		setCurso(new Curso(aluno.getCurso()));
-		setNivel(aluno.getNivel());
-		setAnoIngresso(aluno.getAnoIngresso());
-		setPeriodoIngresso(aluno.getPeriodoIngresso());
-		setMatricula(aluno.getMatricula());
-
+	public Long getId() {
+		return id;
 	}
-	
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getRg() {
+		return rg;
+	}
+
+	public void setRg(String rg) {
+		this.rg = rg;
+	}
+
+	public String getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+
+	public String getNaturalidade() {
+		return naturalidade;
+	}
+
+	public void setNaturalidade(String naturalidade) {
+		this.naturalidade = naturalidade;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
 	public String getMatricula() {
 		return matricula;
 	}
+
 	public void setMatricula(String matricula) {
 		this.matricula = matricula;
 	}
-	
+
 	public String getNomeMae() {
 		return nomeMae;
 	}
+
 	public void setNomeMae(String nomeMae) {
 		this.nomeMae = nomeMae;
 	}
-	public Tipo_nivel getNivel() {
-		return nivel;
+
+	public String getEndereco() {
+		return endereco;
 	}
-	public void setNivel(Tipo_nivel nivel) {
-		this.nivel = nivel;
+
+	public void setEndereco(String endereco) {
+		this.endereco = endereco;
 	}
-	public Date getAnoIngresso() {
-		return anoIngresso;
+
+	public String getTelefone() {
+		return telefone;
 	}
-	public void setAnoIngresso(Date anoIngresso) {
-		this.anoIngresso = anoIngresso;
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
 	}
-	public int getPeriodoIngresso() {
-		return periodoIngresso;
-	}
-	public void setPeriodoIngresso(int periodoIngresso) {
-		this.periodoIngresso = periodoIngresso;
-	}
-	
+
 	public Curso getCurso() {
 		return curso;
 	}
+
 	public void setCurso(Curso curso) {
 		this.curso = curso;
 	}
 
+	public Tipo_nivel getNivel() {
+		return nivel;
+	}
 
+	public void setNivel(Tipo_nivel nivel) {
+		this.nivel = nivel;
+	}
+
+	public Date getAnoIngresso() {
+		return anoIngresso;
+	}
+
+	public void setAnoIngresso(Date anoIngresso) {
+		this.anoIngresso = anoIngresso;
+	}
+
+	public int getPeriodoIngresso() {
+		return periodoIngresso;
+	}
+
+	public void setPeriodoIngresso(int periodoIngresso) {
+		this.periodoIngresso = periodoIngresso;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Aluno aluno = (Aluno) o;
+		return periodoIngresso == aluno.periodoIngresso &&
+				Objects.equals(id, aluno.id) &&
+				Objects.equals(rg, aluno.rg) &&
+				Objects.equals(cpf, aluno.cpf) &&
+				Objects.equals(naturalidade, aluno.naturalidade) &&
+				Objects.equals(nome, aluno.nome) &&
+				Objects.equals(matricula, aluno.matricula) &&
+				Objects.equals(nomeMae, aluno.nomeMae) &&
+				Objects.equals(endereco, aluno.endereco) &&
+				Objects.equals(telefone, aluno.telefone) &&
+				nivel == aluno.nivel &&
+				Objects.equals(anoIngresso, aluno.anoIngresso);
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(id, rg, cpf, naturalidade, nome, matricula, nomeMae, endereco, telefone, nivel, anoIngresso, periodoIngresso);
+	}
 }
 

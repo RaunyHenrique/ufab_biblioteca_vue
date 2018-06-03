@@ -1,21 +1,25 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Hello from '@/components/Hello'
-import Login from '@/components/Login'
+import Login from '../components/pages/Login'
+import Home from '../components/pages/home/Home'
+import NotFound from '../components/pages/error/NotFound'
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'Hello',
-      component: Hello
+      path: '/login',
+      component: Login
     },
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login
-  }
+    {
+      path: '/',
+      component: Home
+    },
+    {
+      // not found handler
+      path: '*',
+      component: NotFound
+    }
   ]
 })

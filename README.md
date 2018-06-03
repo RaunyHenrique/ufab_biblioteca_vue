@@ -2,7 +2,7 @@
 
 ## Setup Vue.js & Spring Boot
 
-### Prerequisites
+### Prerequisitos
 
 #### MacOSX
 
@@ -26,51 +26,62 @@ choco install npm
 npm install --global vue-cli
 ```
 
-(Oder per Installer von der Website: https://nodejs.org/en/download/)
+## Importação do projeto
 
-## Project setup
+* Importe o projeto como maven na sua ide preferida (recomendo a IntelliJ IDEA para Java)
+
+## Organização do projeto
 
 ```
-spring-boot-vuejs
-├─┬ backend     → backend module with Spring Boot code
+projeto
+├─┬ backend     → modulo de backend com Spring Boot
 │ ├── src
 │ └── pom.xml
-├─┬ frontend    → frontend module with Vue.js code
+├─┬ frontend    → modulo de frontend Vue.js
 │ ├── src
 │ └── pom.xml
-└── pom.xml     → Maven parent pom managing both modules
+└── pom.xml     → Maven pom para os dois modulos
 ```
 
 ## Backend
 
-## Frontend
+* Na pasta do backend, abra o arquivo localizado em src>main>resources>application.properties e altere as seguintes linhas:
 
-## First App run
+```
+* Altere "biblioteca_ufab" para o nome do banco de dados que deseja usar no MySQL
+spring.datasource.url = jdbc:mysql://localhost:3306/biblioteca_ufab?useSSL=false
+
+* Altere as credencias para o banco de dados que ira usar no projeto
+# Username and password
+spring.datasource.username = root
+spring.datasource.password = root
+
+```
+
+## Primeira inicialização
+
+* Na pasta principal do projeto execute o seguinte comando para instalar as dependencias e criar o banco de dados:
 
 ```
 mvn clean install
 ```
 
-Run our complete Spring Boot App:
+Para executar o projeto utilizando o servidor do próprio Spring Boot execute o comando:
 
 ```
 mvn --projects backend spring-boot:run
 ```
 
-Now go to http://localhost:8088/ and have a look at your first Vue.js Spring Boot App.
+OBS: http://localhost:8088/ é o endereço default para o backend do Spring Boot.
 
 
-## fast feedback with webpack-dev-server
-
-The webpack-dev-server, which will update and build every change through all the parts of the JavaScript build-chain, is pre-configured in Vue.js out-of-the-box! So the only thing needed to get fast feedback development-cycle is to cd into `frontend` and run:
+* Vá na pasta `frontend` (utilizando o comando `cd frontend`) e execute o seguinte comando para rodar o servidor do Vue.js:
 
 ```
 npm run dev
 ```
 
-That’s it! 
+OBS: http://localhost:8080/api/* é o endereço default para todas as requests no Vue.js.
 
+É isso, agora você tem acesso a todas as rotas http://localhost:8080/api/* para seu frontend.
 
-## Browser developer tools extension
-
-## HTTP calls from Vue.js to (Spring Boot) REST backend

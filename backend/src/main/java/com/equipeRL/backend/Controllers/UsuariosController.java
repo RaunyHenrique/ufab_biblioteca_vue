@@ -1,7 +1,7 @@
 package com.equipeRL.backend.Controllers;
 
-import com.equipeRL.backend.Models.Curso;
-import com.equipeRL.backend.Services.CursosService;
+import com.equipeRL.backend.Models.Usuario;
+import com.equipeRL.backend.Services.UsuarioService;
 import com.equipeRL.backend.Services.exceptions.CustomErrorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -15,20 +15,20 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("${spring.data.rest.base-path}/cursos")
-public class CursosControllerCRUD implements ControllerCRUDInterface<Curso> {
+@RequestMapping("${spring.data.rest.base-path}/usuarios")
+public class UsuariosController implements ControllerCRUDInterface<Usuario> {
 
     @Autowired
-    private CursosService cursosService;
+    private UsuarioService usuarioService;
 
     @GetMapping()
-    public ResponseEntity<List<Curso>> listAll() {
+    public ResponseEntity<List<Usuario>> listAll() {
 
         try {
 
-            List<Curso> users = cursosService.getAll();
+            List<Usuario> usuarios = usuarioService.getAll();
 
-            return new ResponseEntity<>(users, HttpStatus.OK);
+            return new ResponseEntity<>(usuarios, HttpStatus.OK);
 
         }catch (Exception e) {
 
@@ -39,28 +39,29 @@ public class CursosControllerCRUD implements ControllerCRUDInterface<Curso> {
     }
 
     @PostMapping()
-    public ResponseEntity<?> create(@Valid Curso curso, BindingResult result, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<?> create(@Valid Usuario model, BindingResult result, UriComponentsBuilder ucBuilder) {
 
         try {
 
-            //validas campos
+            //valida campos
             if(result.hasErrors()) {
                 return new ResponseEntity(result.getAllErrors(), HttpStatus.UNPROCESSABLE_ENTITY);
             }
 
             //verifica se já esta cadastrado
-            if (cursosService.isExist(curso)) {
-                return new ResponseEntity(new CustomErrorType("Não é possivel cadastrar o curso com nome " +
-                        curso.getNome() + " pois já está cadastrado."), HttpStatus.CONFLICT);
+            if (usuarioService.isExist(model)) {
+                return new ResponseEntity(new CustomErrorType("Não é possivel cadastrar o usuário com nome " +
+                        model.getNome() + " pois já está cadastrado."), HttpStatus.CONFLICT);
             }
 
-            //salva o curso
-            cursosService.save(curso);
+            //salva o aluno
+            //OBS: encriptação de senha esta sendo feito no service
+            usuarioService.save(model);
 
             HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(ucBuilder.path("/api/cursos/{id}").buildAndExpand(curso.getId()).toUri());
+            headers.setLocation(ucBuilder.path("/api/usuarios/{id}").buildAndExpand(model.getId()).toUri());
 
-            return new ResponseEntity<String>(headers, HttpStatus.CREATED);
+            return new ResponseEntity<>(model, headers, HttpStatus.CREATED);
 
         } catch (Exception e) {
 
@@ -71,27 +72,27 @@ public class CursosControllerCRUD implements ControllerCRUDInterface<Curso> {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") long id, @Valid Curso curso, BindingResult result) {
+    public ResponseEntity<?> update(long id, @Valid Usuario model, BindingResult result) {
 
         try {
 
-            //validas campos
+            //valida campos
             if(result.hasErrors()) {
                 return new ResponseEntity(result.getAllErrors(), HttpStatus.UNPROCESSABLE_ENTITY);
             }
 
             //Verifica se está cadastrado
-            Curso findCurso = cursosService.findById(id);
+            Usuario findUsuario = usuarioService.findById(id);
 
-            if (findCurso == null) {
+            if (findUsuario == null) {
                 return new ResponseEntity(new CustomErrorType("Item de id = " + id + " não encontrado."),
                         HttpStatus.NOT_FOUND);
             }
 
-            //atualiza o curso
-            cursosService.update(curso);
+            //atualiza o usuario
+            usuarioService.update(model);
 
-            return new ResponseEntity<>(curso, HttpStatus.OK);
+            return new ResponseEntity<>(model, HttpStatus.OK);
 
         } catch (Exception e) {
 
@@ -102,19 +103,19 @@ public class CursosControllerCRUD implements ControllerCRUDInterface<Curso> {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") long id) {
+    public ResponseEntity<?> delete(long id) {
 
         try {
 
-            Curso curso = cursosService.findById(id);
+            Usuario usuario = usuarioService.findById(id);
 
-            if (curso == null) {
+            if (usuario == null) {
                 return new ResponseEntity(new CustomErrorType("Item de id = " + id + " não encontrado."),
                         HttpStatus.NOT_FOUND);
             }
 
             //deleta item
-            cursosService.deleteById(id);
+            usuarioService.deleteById(id);
 
             return new ResponseEntity<>(HttpStatus.OK);
 
@@ -125,5 +126,4 @@ public class CursosControllerCRUD implements ControllerCRUDInterface<Curso> {
         }
 
     }
-
 }

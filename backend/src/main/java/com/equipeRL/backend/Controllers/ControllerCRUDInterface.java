@@ -10,16 +10,12 @@ import java.util.List;
 
 public interface ControllerCRUDInterface<T> {
 
-    @GetMapping()
     ResponseEntity<List<T>> listAll();
 
-    @PostMapping()
     ResponseEntity<?> create(@Valid T model, BindingResult result, UriComponentsBuilder ucBuilder);
 
-    @PutMapping("/{id}")
     ResponseEntity<?> update(@PathVariable("id") long id, @Valid T model, BindingResult result);
 
-    @DeleteMapping("/{id}")
     ResponseEntity<?> delete(@PathVariable("id") long id);
 
 }

@@ -1,57 +1,146 @@
 package com.equipeRL.backend.Controllers;
 
+import com.equipeRL.backend.Controllers.propertyEditors.CursoPropertyEditor;
 import com.equipeRL.backend.Models.Aluno;
-import com.equipeRL.backend.Models.enums.Tipo_nivel;
-import com.equipeRL.backend.Repositories.CursosRepository;
+import com.equipeRL.backend.Models.Curso;
 import com.equipeRL.backend.Services.AlunoService;
+import com.equipeRL.backend.Services.exceptions.CustomErrorType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/alunos")
-public class AlunosController {
+@RequestMapping("${spring.data.rest.base-path}/alunos")
+public class AlunosController implements ControllerCRUDInterface<Aluno> {
 
     @Autowired
     private AlunoService alunoService;
 
-//    @Autowired
-//    private GrupoService cadastroGrupoService;
-
     @Autowired
-    private CursosRepository cursos;
+    private CursoPropertyEditor cursoPropertyEditor;
 
-    /**
-     * Esse método é responsável por adicionar os parâmetros que vão ser exibidos na view renderizada ao acessar a rota alunos/novo
-     * @param aluno, que é o objeto a ser acessado
-     * @return mv, que é um objeto ModelAndView que contém os parâmetros que foram adicionados para exibir na view.
-     */
+    @GetMapping()
+    public ResponseEntity<List<Aluno>> listAll() {
 
-//    @GetMapping("/")
-//    public ResponseEntity<List<Aluno>> listarTodos() {
-//
-//        try {
-//
-////            ModelAndView mv = new ModelAndView("aluno/CadastroAluno");
-////            mv.addObject("cursos", cursos.findAll());
-////            mv.addObject("niveis", Tipo_nivel.values());
-////        mv.addObject("grupos", cadastroGrupoService.buscaAluno());
-//
-//            List<Aluno> allAlunos = alunoService.getAllAlunos();
-//
-//            return new ResponseEntity<>(allAlunos, HttpStatus.OK);
-//
-//        } catch (Exception e){
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//
-//    }
+        try {
+
+            List<Aluno> alunos = alunoService.getAll();
+
+            return new ResponseEntity<>(alunos, HttpStatus.OK);
+
+        }catch (Exception e) {
+
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+
+        }
+
+    }
+
+    @PostMapping()
+    public ResponseEntity<?> create(@Valid Aluno model, BindingResult result, UriComponentsBuilder ucBuilder) {
+
+        try {
+
+            //valida campos
+            if(result.hasErrors()) {
+                return new ResponseEntity(result.getAllErrors(), HttpStatus.UNPROCESSABLE_ENTITY);
+            }
+
+            //verifica se já esta cadastrado
+            if (alunoService.isExist(model)) {
+                return new ResponseEntity(new CustomErrorType("Não é possivel cadastrar o aluno com nome " +
+                        model.getNome() + " pois já está cadastrado."), HttpStatus.CONFLICT);
+            }
+
+            //salva o aluno
+            model.gerarMatricula();
+            alunoService.save(model);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(ucBuilder.path("/api/alunos/{id}").buildAndExpand(model.getId()).toUri());
+
+            return new ResponseEntity<>(model, headers, HttpStatus.CREATED);
+
+        } catch (Exception e) {
+
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+
+        }
+
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(long id, @Valid Aluno model, BindingResult result) {
+
+        try {
+
+            //valida campos
+            if(result.hasErrors()) {
+                return new ResponseEntity(result.getAllErrors(), HttpStatus.UNPROCESSABLE_ENTITY);
+            }
+
+            //Verifica se está cadastrado
+            Aluno findAluno = alunoService.findById(id);
+
+            if (findAluno == null) {
+                return new ResponseEntity(new CustomErrorType("Item de id = " + id + " não encontrado."),
+                        HttpStatus.NOT_FOUND);
+            }
+
+            //atualiza o aluno
+            alunoService.update(model);
+
+            return new ResponseEntity<>(model, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+
+        }
+
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(long id) {
+
+        try {
+
+            Aluno aluno = alunoService.findById(id);
+
+            if (aluno == null) {
+                return new ResponseEntity(new CustomErrorType("Item de id = " + id + " não encontrado."),
+                        HttpStatus.NOT_FOUND);
+            }
+
+            //deleta item
+            alunoService.deleteById(id);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+
+        }
+
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
+        binder.registerCustomEditor(Curso.class, cursoPropertyEditor);
+        binder.registerCustomEditor(Date.class, editor);
+    }
 
 }

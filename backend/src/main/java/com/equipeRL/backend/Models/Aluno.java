@@ -218,5 +218,16 @@ public class Aluno {
 
 		return Objects.hash(id, rg, cpf, naturalidade, nome, matricula, nomeMae, endereco, telefone, nivel, anoIngresso, periodoIngresso);
 	}
+
+	/**
+	 * M�todo utilizaod para gerar a matr�cula do aluno, utilizando os atributos da pr�pria classe
+	 */
+	public void gerarMatricula() {
+		this.matricula = "";
+		this.matricula+= String.valueOf(nivel).charAt(0)+ this.getCurso().getSigla()+this.anoIngresso.toString().substring(2, 4)+this.periodoIngresso;
+		//this.matricula += this.getCurso().getSigla();
+		System.out.println(curso.getSigla());
+	}
+
 }
 

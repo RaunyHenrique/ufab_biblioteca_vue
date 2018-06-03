@@ -5,6 +5,7 @@ package com.equipeRL.backend.Models.enums;
  *
  */
 public enum Tipo_nivel {
+
 	GRADUACAO("Graduação"),ESPECIALIZACAO("Especialização"),MESTRADO("Mestrado"),DOUTORADO("Doutorado"),POSGRADUACAO("Pós-graduação"); //G-Graduacao, E-Especializa��o, M-Mestrado, D-Doutorado, P-Pos-Doutorado
 	private String descricao;
 	private Tipo_nivel(String descricao) {

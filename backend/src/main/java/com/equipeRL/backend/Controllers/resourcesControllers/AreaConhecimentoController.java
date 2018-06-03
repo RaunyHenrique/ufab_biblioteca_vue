@@ -1,9 +1,8 @@
-package com.equipeRL.backend.Controllers;
+package com.equipeRL.backend.Controllers.resourcesControllers;
 
 import com.equipeRL.backend.Controllers.interfaces.ControllerCRUDInterface;
-import com.equipeRL.backend.Models.Curso;
-import com.equipeRL.backend.Models.enums.Tipo_curso;
-import com.equipeRL.backend.Services.CursosService;
+import com.equipeRL.backend.Models.AreaConhecimento;
+import com.equipeRL.backend.Services.resourcesServices.AreaConhecimentoService;
 import com.equipeRL.backend.Services.exceptions.CustomErrorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -14,41 +13,23 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping("${spring.data.rest.base-path}/cursos")
-public class CursosController implements ControllerCRUDInterface<Curso> {
+@RequestMapping("${spring.data.rest.base-path}/areas_de_conhecimento")
+public class AreaConhecimentoController implements ControllerCRUDInterface<AreaConhecimento> {
 
     @Autowired
-    private CursosService cursosService;
+    private AreaConhecimentoService areaConhecimentoService;
 
     @GetMapping()
-    public ResponseEntity<List<Curso>> listAll() {
+    public ResponseEntity<List<AreaConhecimento>> listAll() {
 
         try {
 
-            List<Curso> cursos = cursosService.getAll();
+            List<AreaConhecimento> areasConhecimento = areaConhecimentoService.getAll();
 
-            return new ResponseEntity<>(cursos, HttpStatus.OK);
-
-        }catch (Exception e) {
-
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-
-        }
-
-    }
-
-    @GetMapping("/tipos_de_cursos")
-    public ResponseEntity<List<Tipo_curso>> listAllTipos() {
-
-        try {
-
-            List<Tipo_curso> tipos_curso = Arrays.asList(Tipo_curso.values());
-
-            return new ResponseEntity<>(tipos_curso, HttpStatus.OK);
+            return new ResponseEntity<>(areasConhecimento, HttpStatus.OK);
 
         }catch (Exception e) {
 
@@ -59,7 +40,7 @@ public class CursosController implements ControllerCRUDInterface<Curso> {
     }
 
     @PostMapping()
-    public ResponseEntity<?> create(@Valid Curso curso, BindingResult result, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<?> create(@Valid AreaConhecimento model, BindingResult result, UriComponentsBuilder ucBuilder) {
 
         try {
 
@@ -69,18 +50,18 @@ public class CursosController implements ControllerCRUDInterface<Curso> {
             }
 
             //verifica se já esta cadastrado
-            if (cursosService.isExist(curso)) {
-                return new ResponseEntity(new CustomErrorType("Não é possivel cadastrar o curso com nome " +
-                        curso.getNome() + " pois já está cadastrado."), HttpStatus.CONFLICT);
+            if (areaConhecimentoService.isExist(model)) {
+                return new ResponseEntity(new CustomErrorType("Não é possivel cadastrar a área com nome " +
+                        model.getNome() + " pois já está cadastrado."), HttpStatus.CONFLICT);
             }
 
-            //salva o curso
-            cursosService.save(curso);
+            //salva a area
+            areaConhecimentoService.save(model);
 
             HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(ucBuilder.path("/api/cursos/{id}").buildAndExpand(curso.getId()).toUri());
+            headers.setLocation(ucBuilder.path("/api/areas_de_conhecimento/{id}").buildAndExpand(model.getId()).toUri());
 
-            return new ResponseEntity<>(curso, headers, HttpStatus.CREATED);
+            return new ResponseEntity<>(model, headers, HttpStatus.CREATED);
 
         } catch (Exception e) {
 
@@ -91,7 +72,7 @@ public class CursosController implements ControllerCRUDInterface<Curso> {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") long id, @Valid Curso curso, BindingResult result) {
+    public ResponseEntity<?> update(long id, @Valid AreaConhecimento model, BindingResult result) {
 
         try {
 
@@ -101,17 +82,17 @@ public class CursosController implements ControllerCRUDInterface<Curso> {
             }
 
             //Verifica se está cadastrado
-            Curso findCurso = cursosService.findById(id);
+            AreaConhecimento findAreaConhecimento = areaConhecimentoService.findById(id);
 
-            if (findCurso == null) {
+            if (findAreaConhecimento == null) {
                 return new ResponseEntity(new CustomErrorType("Item de id = " + id + " não encontrado."),
                         HttpStatus.NOT_FOUND);
             }
 
-            //atualiza o curso
-            cursosService.update(curso);
+            //atualiza a area
+            areaConhecimentoService.update(model);
 
-            return new ResponseEntity<>(curso, HttpStatus.OK);
+            return new ResponseEntity<>(model, HttpStatus.OK);
 
         } catch (Exception e) {
 
@@ -122,19 +103,19 @@ public class CursosController implements ControllerCRUDInterface<Curso> {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") long id) {
+    public ResponseEntity<?> delete(long id) {
 
         try {
 
-            Curso curso = cursosService.findById(id);
+            AreaConhecimento areaConhecimento = areaConhecimentoService.findById(id);
 
-            if (curso == null) {
+            if (areaConhecimento == null) {
                 return new ResponseEntity(new CustomErrorType("Item de id = " + id + " não encontrado."),
                         HttpStatus.NOT_FOUND);
             }
 
             //deleta item
-            cursosService.deleteById(id);
+            areaConhecimentoService.deleteById(id);
 
             return new ResponseEntity<>(HttpStatus.OK);
 
@@ -145,5 +126,4 @@ public class CursosController implements ControllerCRUDInterface<Curso> {
         }
 
     }
-
 }

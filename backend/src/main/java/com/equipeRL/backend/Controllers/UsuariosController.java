@@ -1,5 +1,6 @@
 package com.equipeRL.backend.Controllers;
 
+import com.equipeRL.backend.Controllers.interfaces.ControllerCRUDInterface;
 import com.equipeRL.backend.Models.Usuario;
 import com.equipeRL.backend.Services.UsuarioService;
 import com.equipeRL.backend.Services.exceptions.CustomErrorType;

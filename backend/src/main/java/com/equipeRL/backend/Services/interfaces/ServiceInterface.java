@@ -1,4 +1,4 @@
-package com.equipeRL.backend.Services;
+package com.equipeRL.backend.Services.interfaces;
 
 import java.util.List;
 

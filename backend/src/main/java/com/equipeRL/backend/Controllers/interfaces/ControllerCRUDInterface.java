@@ -1,4 +1,4 @@
-package com.equipeRL.backend.Controllers;
+package com.equipeRL.backend.Controllers.interfaces;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;

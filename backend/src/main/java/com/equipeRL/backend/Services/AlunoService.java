@@ -2,6 +2,7 @@ package com.equipeRL.backend.Services;
 
 import com.equipeRL.backend.Models.Aluno;
 import com.equipeRL.backend.Repositories.AlunosRepository;
+import com.equipeRL.backend.Services.interfaces.ServiceInterface;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -55,11 +55,9 @@ public class Livro extends ItemAcervo {
 
 	@Transient
 	@NotEmpty(message = " Pelo menos um autor é obrigatório")
-	private String id_autor;
+	private Long id_autor;
 	
-	public Livro(){
-		
-	}
+	public Livro() {}
 	
 	/**
 	 * Método construtor da classe Livro
@@ -156,11 +154,11 @@ public class Livro extends ItemAcervo {
 	}
 	
 	
-	public String getId_autor() {
+	public Long getId_autor() {
 		return id_autor;
 	}
 
-	public void setId_autor(String id_autor) {
+	public void setId_autor(Long id_autor) {
 		this.id_autor = id_autor;
 	}
 

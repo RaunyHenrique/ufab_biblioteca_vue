@@ -1,8 +1,10 @@
 package com.equipeRL.backend.Controllers;
 
+import com.equipeRL.backend.Controllers.interfaces.ControllerCRUDInterface;
 import com.equipeRL.backend.Controllers.propertyEditors.CursoPropertyEditor;
 import com.equipeRL.backend.Models.Aluno;
 import com.equipeRL.backend.Models.Curso;
+import com.equipeRL.backend.Models.enums.Tipo_nivel;
 import com.equipeRL.backend.Services.AlunoService;
 import com.equipeRL.backend.Services.exceptions.CustomErrorType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +41,23 @@ public class AlunosController implements ControllerCRUDInterface<Aluno> {
             List<Aluno> alunos = alunoService.getAll();
 
             return new ResponseEntity<>(alunos, HttpStatus.OK);
+
+        }catch (Exception e) {
+
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+
+        }
+
+    }
+
+    @GetMapping("/tipos_de_niveis")
+    public ResponseEntity<List<Tipo_nivel>> listAllNiveis() {
+
+        try {
+
+            List<Tipo_nivel> tipos_nivel = Arrays.asList(Tipo_nivel.values());
+
+            return new ResponseEntity<>(tipos_nivel, HttpStatus.OK);
 
         }catch (Exception e) {
 

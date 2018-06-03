@@ -2,6 +2,7 @@ package com.equipeRL.backend.Services;
 
 import com.equipeRL.backend.Models.Usuario;
 import com.equipeRL.backend.Repositories.UsuarioRepository;
+import com.equipeRL.backend.Services.interfaces.ServiceInterface;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

@@ -2,6 +2,7 @@ package com.equipeRL.backend.Services;
 
 import com.equipeRL.backend.Models.Curso;
 import com.equipeRL.backend.Repositories.CursosRepository;
+import com.equipeRL.backend.Services.interfaces.ServiceInterface;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

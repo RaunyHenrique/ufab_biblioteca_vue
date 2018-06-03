@@ -45,13 +45,13 @@ projeto
 
 ## Backend
 
-* Na pasta do backend, abra o arquivo localizado em src>main>resources>application.properties e altere as seguintes linhas:
+* Na pasta do backend, abra o arquivo localizado em `src>main>resources>application.properties` e altere as seguintes linhas:
 
 ```
-* Altere "biblioteca_ufab" para o nome do banco de dados que deseja usar no MySQL
+* Altere "biblioteca_ufab" para o nome do banco de dados que deseja usar no MySQL:
 spring.datasource.url = jdbc:mysql://localhost:3306/biblioteca_ufab?useSSL=false
 
-* Altere as credencias para o banco de dados que ira usar no projeto
+* Altere as credenciais para o banco de dados que ira usar no projeto:
 # Username and password
 spring.datasource.username = root
 spring.datasource.password = root

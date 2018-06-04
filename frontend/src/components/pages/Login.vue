@@ -9,10 +9,37 @@
         <h2 class="form-signin-heading">Biblioteca - UFAB</h2>
         <div class="alert alert-danger" v-if="error">{{ error }}</div>
 
-        <label for="inputEmail" class="sr-only">Email</label>
-        <input v-model="username" name="username" type="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
-        <label for="inputPassword" class="sr-only">Senha</label>
-        <input v-model="password" name="password" type="password" id="inputPassword" class="form-control" placeholder="Senha" required>
+        <b-form-group label-for="inputEmail">
+
+          <b-form-input id="inputEmail"
+                        name="username"
+                        type="email"
+                        v-model="username"
+                        :state="$v.username.$dirty ? !$v.username.$error : null"
+                        aria-describedby="input1"
+                        placeholder="Email" autofocus/>
+
+          <b-form-invalid-feedback id="input1">
+            Campo requerido e deve ser um email válido.
+          </b-form-invalid-feedback>
+
+        </b-form-group>
+
+        <b-form-group label-for="inputPassword">
+
+          <b-form-input id="inputPassword"
+                        name="password"
+                        type="password"
+                        v-model="password"
+                        :state="$v.password.$dirty ? !$v.password.$error : null"
+                        aria-describedby="input2"
+                        placeholder="Senha"/>
+
+          <b-form-invalid-feedback id="input2">
+            Campo requerido.
+          </b-form-invalid-feedback>
+
+        </b-form-group>
 
         <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
 
@@ -27,6 +54,7 @@
 <script>
 
   import { mapGetters } from 'vuex'
+  import { required, minLength, email } from "vuelidate/lib/validators"
 
   export default {
     name: "Login",
@@ -37,7 +65,17 @@
       return {
         username: '',
         password: '',
-        error: false
+        error: false,
+      }
+    },
+    validations: {
+      username: {
+        required,
+        email
+      },
+      password: {
+        required,
+        minLength: minLength(3)
       }
     },
     updated () {
@@ -48,11 +86,18 @@
     },
     methods: {
       login () {
+
+        if (this.$v.$invalid) {
+          this.$v.$touch();
+          return
+        }
+
         var qs = require('qs');
-        var data = { username: this.username, password: this.password };
-        this.$http.post('/login', qs.stringify(data))
+        var params = { username: this.username, password: this.password };
+        this.$http.post('/login', qs.stringify(params))
           .then(request => this.loginSuccessful(request))
           .catch(() => this.loginFailed())
+
       },
       loginSuccessful (req) {
         if (!req) {
@@ -62,12 +107,12 @@
 
         this.error = false;
         localStorage.token = req;
-        this.$store.dispatch('login'); // <=
+        this.$store.dispatch('login');
         this.$router.replace(this.$route.query.redirect || '/')
       },
       loginFailed () {
         this.error = 'Falha no login!';
-        this.$store.dispatch('logout'); // <=
+        this.$store.dispatch('logout');
         delete localStorage.token
       },
       checkCurrentLogin () {

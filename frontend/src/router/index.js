@@ -5,7 +5,7 @@ import Logout from '../components/pages/Logout'
 import Home from '../components/pages/home/Home'
 import NotFound from '../components/pages/error/NotFound'
 
-Vue.use(Router);
+Vue.use(Router)
 
 export default new Router({
   mode: 'history',

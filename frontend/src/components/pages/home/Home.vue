@@ -9,9 +9,9 @@
 </template>
 
 <script>
-  import MainLayout from "../../layouts/MainLayout";
+  import MainLayout from '../../layouts/MainLayout';
   export default {
-    name: "Home",
+    name: 'Home',
     components: {MainLayout}
   }
 </script>

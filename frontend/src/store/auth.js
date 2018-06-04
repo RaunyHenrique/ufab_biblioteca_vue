@@ -5,7 +5,7 @@ import * as MutationTypes from './mutation-types'
 
 const state = {
   user: User.from(localStorage.token)
-};
+}
 
 const mutations = {
   [MutationTypes.LOGIN] (state) {
@@ -14,13 +14,13 @@ const mutations = {
   [MutationTypes.LOGOUT] (state) {
     state.user = null
   }
-};
+}
 
 const getters = {
   currentUser (state) {
     return state.user
   }
-};
+}
 
 const actions = {
   login ({ commit }) {
@@ -30,7 +30,7 @@ const actions = {
   logout ({ commit }) {
     commit(MutationTypes.LOGOUT)
   }
-};
+}
 
 export default {
   state,

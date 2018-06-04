@@ -7,19 +7,22 @@ import VueAxios from 'vue-axios'
 import router from './router'
 import store from './store'
 import BootstrapVue from 'bootstrap-vue'
+import Vuelidate from 'vuelidate'
 
-Vue.config.productionTip = false;
-Vue.config.devtools = true;
+Vue.config.productionTip = false
+Vue.config.devtools = true
 
 /* eslint-disable */
 // Bootstrap
-Vue.use(BootstrapVue);
+Vue.use(BootstrapVue)
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 //Serve para fazer o binding do axios (preconfigurado) na instancia do Vue
 //(não precisa mais fazer o import do axios nos components)
-Vue.use(VueAxios, axios);
+Vue.use(VueAxios, axios)
+
+Vue.use(Vuelidate)
 
 new Vue({
   el: '#app',
@@ -28,4 +31,4 @@ new Vue({
   store,
   components: { App },
   template: '<App/>'
-});
+})

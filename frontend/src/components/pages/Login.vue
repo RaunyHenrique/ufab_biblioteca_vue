@@ -1,103 +1,80 @@
 <template>
 
-  <main-layout>
+  <div class="login-overlay">
 
-    <div id="login">
+    <div class="login-wrapper border border-light">
 
-      <img src="/static/img/logo.png" class="center-block logo">
+      <form class="form-signin" @submit.prevent="login()">
 
-      <div class="text-center col-sm-12">
-        <!-- login form -->
-        <form @submit.prevent="checkCreds">
-          <div class="input-group">
-            <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-            <input class="form-control" name="username" placeholder="Username" type="text" v-model="username">
-          </div>
+        <h2 class="form-signin-heading">Biblioteca - UFAB</h2>
+        <div class="alert alert-danger" v-if="error">{{ error }}</div>
 
-          <div class="input-group">
-            <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-            <input class="form-control" name="password" placeholder="Password" type="password" v-model="password">
-          </div>
-          <button type="submit" v-bind:class="'btn btn-primary btn-lg ' + loading">Login</button>
-        </form>
+        <label for="inputEmail" class="sr-only">Email</label>
+        <input v-model="username" name="username" type="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
+        <label for="inputPassword" class="sr-only">Senha</label>
+        <input v-model="password" name="password" type="password" id="inputPassword" class="form-control" placeholder="Senha" required>
 
-        <!-- errors -->
-        <div v-if=response class="text-red"><p class="vertical-5p lead">{{response}}</p></div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
 
-      </div>
+      </form>
 
     </div>
 
-  </main-layout>
+  </div>
 
 </template>
 
 <script>
 
-  import MainLayout from "../layouts/MainLayout";
+  import { mapGetters } from 'vuex'
 
   export default {
     name: "Login",
-    components: {MainLayout},
-    data(router) {
+    computed: {
+      ...mapGetters({ currentUser: 'currentUser' })
+    },
+    data () {
       return {
-        section: 'Login',
-        loading: '',
         username: '',
         password: '',
-        response: ''
+        error: false
       }
     },
+    updated () {
+      this.checkCurrentLogin();
+    },
+    created () {
+      this.checkCurrentLogin();
+    },
     methods: {
-      checkCreds() {
-        const { username, password } = this
-        this.toggleLoading()
-        this.resetResponse()
-        this.$store.commit('TOGGLE_LOADING')
-        /* Making API call to authenticate a user */
-        api
-          .request('post', '/login', { username, password })
-          .then(response => {
-            this.toggleLoading()
-            var data = response.data
-            /* Checking if error object was returned from the server */
-            if (data.error) {
-              var errorName = data.error.name
-              if (errorName) {
-                this.response =
-                  errorName === 'InvalidCredentialsError'
-                    ? 'Username/Password incorrect. Please try again.'
-                    : errorName
-              } else {
-                this.response = data.error
-              }
-              return
-            }
-            /* Setting user in the state and caching record to the localStorage */
-            if (data.user) {
-              var token = 'Bearer ' + data.token
-              this.$store.commit('SET_USER', data.user)
-              this.$store.commit('SET_TOKEN', token)
-              if (window.localStorage) {
-                window.localStorage.setItem('user', JSON.stringify(data.user))
-                window.localStorage.setItem('token', token)
-              }
-              this.$router.push(data.redirect ? data.redirect : '/')
-            }
-          })
-          .catch(error => {
-            this.$store.commit('TOGGLE_LOADING')
-            console.log(error)
-            this.response = 'Server appears to be offline'
-            this.toggleLoading()
-          })
+      login () {
+        var qs = require('qs');
+        var data = { username: this.username, password: this.password };
+        this.$http.post('/login', qs.stringify(data))
+          .then(request => this.loginSuccessful(request))
+          .catch(() => this.loginFailed())
       },
-      toggleLoading() {
-        this.loading = this.loading === '' ? 'loading' : ''
+      loginSuccessful (req) {
+        if (!req) {
+          this.loginFailed();
+          return
+        }
+
+        this.error = false;
+        localStorage.token = req;
+        this.$store.dispatch('login'); // <=
+        this.$router.replace(this.$route.query.redirect || '/')
       },
-      resetResponse() {
-        this.response = ''
-      }
+      loginFailed () {
+        this.error = 'Falha no login!';
+        this.$store.dispatch('logout'); // <=
+        delete localStorage.token
+      },
+      checkCurrentLogin () {
+        if (this.currentUser) {
+          this.$router.replace(this.$route.query.redirect || '/')
+        }
+      },
     }
   }
 
@@ -105,8 +82,56 @@
 
 <style scoped>
 
-  #login {
-    padding: 10em;
+  .login-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+  .login-wrapper {
+    background: #fff;
+    width: 70%;
+    margin: 12% auto;
+    animation: fadein 0.6s;
+  }
+  @keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .form-signin {
+    max-width: 330px;
+    padding: 10% 15px;
+    margin: 0 auto;
+  }
+  .form-signin .form-signin-heading,
+  .form-signin .checkbox {
+    margin-bottom: 10px;
+  }
+  .form-signin .checkbox {
+    font-weight: normal;
+  }
+  .form-signin .form-control {
+    position: relative;
+    height: auto;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
+  }
+  .form-signin .form-control:focus {
+    z-index: 2;
+  }
+  .form-signin input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  .form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+
   }
 
 </style>

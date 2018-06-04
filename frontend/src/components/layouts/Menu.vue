@@ -49,7 +49,7 @@
           <template slot="button-content">
             <em>Usuário</em>
           </template>
-          <b-dropdown-item href="#">Logout</b-dropdown-item>
+          <b-dropdown-item to="/logout">Logout</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
 

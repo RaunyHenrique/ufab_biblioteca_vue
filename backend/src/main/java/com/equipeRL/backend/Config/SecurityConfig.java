@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.csrf().disable().authorizeRequests()
-                .antMatchers(HttpMethod.POST,"api/usuarios").hasAuthority("ROLE_ADMIN")//criação..
+                .antMatchers(HttpMethod.POST,"api/usuarios").hasAuthority("ADMIN")//criação..
                 .antMatchers(HttpMethod.POST, "/api/login").permitAll()
                 .anyRequest().authenticated()
                 .and()

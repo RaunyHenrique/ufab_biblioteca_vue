@@ -1,7 +1,11 @@
 package com.equipeRL.backend.Config;
 
+import com.equipeRL.backend.Models.Usuario;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jdk.nashorn.internal.parser.JSONParser;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
@@ -18,9 +22,9 @@ public class TokenAuthenticationService {
     private static final String HEADER_STRING = "Authorization";
 //    private static final String HEADER_JSON = "Accept";
 
-    public static void addAuthentication(HttpServletResponse res, String username) {
+    public static void addAuthentication(HttpServletResponse res, String user) {
         String JWT = Jwts.builder()
-                .setSubject(username)
+                .setSubject(user)
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATIONTIME))
                 .signWith(SignatureAlgorithm.HS512, SECRET)
                 .compact();

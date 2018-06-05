@@ -2,6 +2,7 @@ package com.equipeRL.backend.Config;
 
 import com.equipeRL.backend.Models.Usuario;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jdk.nashorn.internal.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 
 public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 
@@ -37,7 +39,7 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
             throws AuthenticationException, IOException, ServletException {
 
         if (!req.getMethod().equals("POST")) {
-            throw new AuthenticationServiceException("Metodo de autenticação não suportado: " + req.getMethod());
+            throw new AuthenticationServiceException("Metodo de autentificação não suportado: " + req.getMethod());
         }
 
         String username = obtainUsername(req);
@@ -71,7 +73,14 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
             HttpServletResponse res, FilterChain chain,
             Authentication auth
     ) throws IOException, ServletException {
-        TokenAuthenticationService.addAuthentication(res, auth.getName());
+
+        JWTSubject sub = new JWTSubject(auth.getName(), auth.getAuthorities());//Subject personalizado!
+
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonString = mapper.writeValueAsString(sub);
+
+        TokenAuthenticationService.addAuthentication(res, jsonString);
+
     }
 
     private String obtainPassword(HttpServletRequest request) {

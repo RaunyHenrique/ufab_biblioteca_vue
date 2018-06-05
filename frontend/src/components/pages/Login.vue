@@ -100,15 +100,19 @@
 
       },
       loginSuccessful (req) {
+
+        console.log("REQUEST: " + JSON.stringify(req.data));
+
         if (!req) {
           this.loginFailed();
           return
         }
 
         this.error = false;
-        localStorage.token = req;
+        localStorage.token = req.data;
         this.$store.dispatch('login');
         this.$router.replace(this.$route.query.redirect || '/')
+
       },
       loginFailed () {
         this.error = 'Falha no login!';

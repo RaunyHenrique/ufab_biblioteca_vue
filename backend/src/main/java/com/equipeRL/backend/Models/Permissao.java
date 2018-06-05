@@ -1,11 +1,13 @@
 package com.equipeRL.backend.Models;
 
+import org.springframework.security.core.GrantedAuthority;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name = "permissao")
-public class Permissao {
+public class Permissao implements GrantedAuthority {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -42,6 +44,11 @@ public class Permissao {
 	public int hashCode() {
 
 		return Objects.hash(id, nome);
+	}
+
+	@Override
+	public String getAuthority() {
+		return this.nome;
 	}
 
 }

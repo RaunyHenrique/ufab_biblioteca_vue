@@ -17,11 +17,10 @@ export default class User {
 
     if (toJSON) {
 
-      this.token = token
       this.email = toJSON.email
       this.role = toJSON.auth[0]["authority"]
 
-      console.log(this.token, this.email, this.role)
+      console.log(this.email, this.role)
 
     }
 

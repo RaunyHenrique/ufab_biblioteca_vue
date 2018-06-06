@@ -26,9 +26,9 @@ Vue.use(Vuelidate)
 
 new Vue({
   el: '#app',
-  router,
   axios,
   store,
+  router,
   components: { App },
   template: '<App/>'
 })

@@ -1,19 +1,28 @@
 <template>
 
-  <main-layout>
+  <b-jumbotron>
 
-    Home!
+    <template slot="header">
+      Biblioteca - UFAB
+    </template>
+    <template slot="lead">
 
-  </main-layout>
+    </template>
+    <hr class="my-4">
+    <p>
+      Copyright© 2018 - Desenvolvido por Rauny Henrique Bezerra e Luis Lancellot
+    </p>
+
+  </b-jumbotron>
 
 </template>
 
 <script>
-  import MainLayout from '../../layouts/MainLayout';
+
   export default {
     name: 'Home',
-    components: {MainLayout}
   }
+
 </script>
 
 <style scoped>

@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from '../components/pages/Login'
-import Logout from '../components/pages/Logout'
+import Login from '../components/pages/auth/Login'
+import Logout from '../components/pages/auth/Logout'
+import MainLayout from '../components/layouts/MainLayout'
 import Home from '../components/pages/home/Home'
+import Alunos from '../components/pages/alunos/Alunos'
 import NotFound from '../components/pages/error/NotFound'
 
 Vue.use(Router)
@@ -13,7 +15,7 @@ const router = new Router({
     {
       path: '/login',
       component: Login,
-      meta: {authRequired: false}
+      meta: { authRequired: false }
     },
     {
       path: '/logout',
@@ -22,14 +24,26 @@ const router = new Router({
     },
     {
       path: '/',
-      component: Home,
-      meta: {authRequired: true}
+      component: MainLayout,
+      meta: { authRequired: true },
+      children: [
+        {
+          path: '',
+          name: 'Home',
+          component: Home,
+        },
+        {
+          path: '/alunos',
+          name: 'Alunos',
+          component: Alunos,
+        },
+      ]
     },
     {
       // not found handler
       path: '*',
       component: NotFound,
-      meta: {authRequired: false}
+      meta: { authRequired: false }
     }
   ]
 })

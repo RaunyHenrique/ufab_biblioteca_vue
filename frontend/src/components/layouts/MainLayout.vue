@@ -1,16 +1,20 @@
 <template>
 
-  <div id="app">
+  <div>
 
     <nav>
       <Menu></Menu>
     </nav>
 
+    <header>
+      <slot name="header"></slot>
+    </header>
+
     <main>
 
       <b-container id="container-body">
 
-        <slot></slot>
+        <router-view></router-view>
 
       </b-container>
 
@@ -26,11 +30,11 @@
 
 <script>
 
-  import Menu from "./Menu";
+  import Menu from './Menu'
 
   export default {
     name: "MainLayout",
-    components: {Menu}
+    components: {Menu},
   }
 
 </script>

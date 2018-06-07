@@ -13,10 +13,10 @@
 
       <b-navbar-nav>
 
-        <b-nav-item href="#">Home</b-nav-item>
-        <b-nav-item href="#">Alunos</b-nav-item>
-        <b-nav-item href="#">Cursos</b-nav-item>
-        <b-nav-item href="#">Funcionarios</b-nav-item>
+        <b-nav-item to="/">Home</b-nav-item>
+        <b-nav-item to="/alunos">Alunos</b-nav-item>
+        <b-nav-item to="/cursos">Cursos</b-nav-item>
+        <b-nav-item to="/funcionarios">Funcionarios</b-nav-item>
 
         <b-nav-item-dropdown text="Acervo" right>
           <b-dropdown-header>Itens do acervo</b-dropdown-header>

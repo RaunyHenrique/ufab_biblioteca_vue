@@ -101,7 +101,7 @@ public class AlunosController implements ControllerCRUDInterface<Aluno> {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(long id, @Valid Aluno model, BindingResult result) {
+    public ResponseEntity<?> update(@PathVariable("id") long id, @Valid Aluno model, BindingResult result) {
 
         try {
 
@@ -132,7 +132,7 @@ public class AlunosController implements ControllerCRUDInterface<Aluno> {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(long id) {
+    public ResponseEntity<?> delete(@PathVariable("id") long id) {
 
         try {
 

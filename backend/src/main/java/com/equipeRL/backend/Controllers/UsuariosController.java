@@ -73,7 +73,7 @@ public class UsuariosController implements ControllerCRUDInterface<Usuario> {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(long id, @Valid Usuario model, BindingResult result) {
+    public ResponseEntity<?> update(@PathVariable("id") long id, @Valid Usuario model, BindingResult result) {
 
         try {
 
@@ -104,7 +104,7 @@ public class UsuariosController implements ControllerCRUDInterface<Usuario> {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(long id) {
+    public ResponseEntity<?> delete(@PathVariable("id") long id) {
 
         try {
 

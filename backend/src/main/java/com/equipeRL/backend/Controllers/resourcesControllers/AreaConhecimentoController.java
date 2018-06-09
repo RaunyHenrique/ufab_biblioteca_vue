@@ -72,7 +72,7 @@ public class AreaConhecimentoController implements ControllerCRUDInterface<AreaC
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(long id, @Valid AreaConhecimento model, BindingResult result) {
+    public ResponseEntity<?> update(@PathVariable("id") long id, @Valid AreaConhecimento model, BindingResult result) {
 
         try {
 
@@ -103,7 +103,7 @@ public class AreaConhecimentoController implements ControllerCRUDInterface<AreaC
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(long id) {
+    public ResponseEntity<?> delete(@PathVariable("id") long id) {
 
         try {
 

@@ -48,7 +48,7 @@ public class Usuario implements UserDetails {
 	@NotEmpty(message = " A senha é obrigatória")
 	private String password;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	private Set <Permissao> permissoes;
 
 	public Usuario() {}

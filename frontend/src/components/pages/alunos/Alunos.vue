@@ -182,6 +182,9 @@
                          :options="periodosDeIngresso"
                          required
                          v-model="form.periodoIngresso">
+            <template slot="first">
+              <option :value="null">Selecione...</option>
+            </template>
           </b-form-select>
         </b-form-group>
 
@@ -191,7 +194,11 @@
                          name="nivel"
                          :options="niveisDeGraduacao"
                          required
-                         v-model="form.nivel">
+                         v-model="form.nivel"
+                          @change="setCursosPorNivel">
+            <template slot="first">
+              <option :value="null">Selecione...</option>
+            </template>
           </b-form-select>
         </b-form-group>
 
@@ -199,9 +206,12 @@
                       label-for="curso">
           <b-form-select id="curso"
                          name="curso"
-                         :options="cursos"
+                         :options="filtedCursos"
                          required
                          v-model="form.curso">
+            <template slot="first">
+              <option :value="null">Selecione...</option>
+            </template>
           </b-form-select>
         </b-form-group>
 
@@ -246,6 +256,7 @@
         modalInfo: { title: '', content: '' },
         form: {},
         cursos: [],
+        filtedCursos: [],
         periodosDeIngresso: {'1': 'Primeiro semestre', '2': 'Segundo semestre'},
         niveisDeGraduacao: {},
         idToDelete: null,
@@ -307,6 +318,54 @@
           .catch((error) => {
             console.log(error)
           })
+
+      },
+      setCursosPorNivel (evt) {
+
+        console.log("OPAA " + evt)
+
+        var value = evt
+
+        switch(value){
+          case 'GRADUACAO':
+            this.listFiltedCursos()
+            break
+          case 'ESPECIALIZACAO':
+            this.listFiltedCursos()
+            break
+          case 'MESTRADO':
+            this.listFiltedCursos()
+            break
+          case 'DOUTORADO':
+            this.listFiltedCursos()
+            break
+          case 'POSGRADUACAO':
+            this.listFiltedCursos()
+            break
+          default: //default child option is blank
+            $("#curso").html('')
+            break
+        }
+
+      },
+      filtrarPorNivel(value) {
+        return value['tipo'] == this.form.nivel;
+      },
+      listFiltedCursos() {
+
+        var cursosFiltrados = this.cursos.filter(this.filtrarPorNivel)
+
+        console.log(cursosFiltrados)
+
+        this.filtedCursos = []
+        var cursos = []
+        cursosFiltrados.forEach(function (obj) {
+
+          cursos.push({text: obj['text'], value: obj['value'], disabled: false})
+
+        })
+
+        this.filtedCursos = cursos
 
       },
       setFormFields(data) {

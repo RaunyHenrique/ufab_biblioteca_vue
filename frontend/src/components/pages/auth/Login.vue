@@ -20,7 +20,15 @@
                         placeholder="Email" autofocus/>
 
           <b-form-invalid-feedback id="input1">
-            Campo requerido e deve ser um email válido.
+
+            <div v-if="$v.username.required">
+              Campo requerido.
+            </div>
+
+            <div v-if="$v.username.email">
+              Campo deve conter um email válido.
+            </div>
+
           </b-form-invalid-feedback>
 
         </b-form-group>
@@ -36,7 +44,15 @@
                         placeholder="Senha"/>
 
           <b-form-invalid-feedback id="input2">
-            Campo requerido.
+
+            <div v-if="$v.password.required">
+              Campo requerido.
+            </div>
+
+            <div v-if="$v.password.minLength">
+              Campo deve ter no minimo 3 caracteres.
+            </div>
+
           </b-form-invalid-feedback>
 
         </b-form-group>

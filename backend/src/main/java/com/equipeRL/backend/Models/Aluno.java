@@ -23,50 +23,50 @@ public class Aluno {
 	private Long id;
 
 	@NotNull
-	@NotEmpty
 	@Column(unique = true)
+	@NotEmpty(message="Campo rg obrigatório")
 	private String rg;
 
 	@NotNull
-	@NotEmpty
 	@Column(unique = true)
+	@NotEmpty(message="Campo cpf obrigatório")
 	private String cpf;
 
 	@NotNull
-	@NotEmpty
+	@NotEmpty(message="Campo naturalidade obrigatória")
 	private String naturalidade;
 
 	@NotNull
-	@NotEmpty
+	@NotEmpty(message="Campo nome obrigatório")
 	private String nome;
 
 	private String matricula;
 
-	@NotEmpty(message=" Nome da mãe é obrigatório")
+	@NotEmpty(message="Campo nome da mãe é obrigatório")
 	private String nomeMae;
 
 	@NotNull
-	@NotEmpty
+	@NotEmpty(message="Campo endereco é obrigatório")
 	private String endereco;
 
 	@NotNull
-	@NotEmpty
 	@Column(unique = true)
+	@NotEmpty(message="Campo telefone é obrigatório")
 	private String telefone;
 
-	@NotNull(message=" Curso é obrigatório")
+	@NotNull(message="Curso é obrigatório")
 	@ManyToOne(cascade=CascadeType.MERGE)
 	@JoinColumn(name = "curso_id",nullable=false)
 	private Curso curso;
 
-	@NotNull(message=" Nivel do aluno é obrigatório")
+	@NotNull(message="Nivel do aluno é obrigatório")
 	@Enumerated(EnumType.STRING)
 	private Tipo_nivel nivel;
 
-	@NotNull(message=" Data de ingresso é obrigatório")
+	@NotNull(message="Data de ingresso é obrigatório")
 	private Date anoIngresso;
 
-	@NotNull(message=" Periodo de ingresso é obrigatório")
+	@NotNull(message="Periodo de ingresso é obrigatório")
 	private int periodoIngresso;
 
 	/**

@@ -8,7 +8,7 @@
       <b-col>
 
         <h1 id="title-page" class="text-left">{{title}}</h1>
-        <b-button @click.stop="showModal('Cadastrar', null, null, $event.target)" id="btn-cadastrar" variant="primary" style="display: inline-block;">Cadastrar aluno</b-button>
+        <b-button @click.stop="showModal('Cadastrar', null, null, $event.target)" id="btn-cadastrar" variant="primary" style="display: inline-block;">Cadastrar curso</b-button>
 
       </b-col>
 
@@ -55,9 +55,7 @@
              id="table-listar"
     >
 
-      <template slot="curso" slot-scope="row">{{row.value.nome}} - {{row.value.tipo}}</template>
-
-      <template slot="anoIngresso" slot-scope="row">{{ row.value | moment("YYYY") }}</template>
+      <template slot="area" slot-scope="row">{{row.value.nome}}</template>
 
       <template slot="actions" slot-scope="row">
 
@@ -85,27 +83,26 @@
 
       <template slot="campos_personalizados">
 
-        <b-form-group label="Nível de graduação"
-                      label-for="nivel">
-          <b-form-select id="nivel"
-                         name="nivel"
-                         :options="niveisDeGraduacao"
+        <b-form-group label="Área de conhecimento"
+                      label-for="area">
+          <b-form-select id="area"
+                         name="area"
+                         :options="areasDeConhecimento"
                          required
-                         v-model="form.nivel"
-                         @change="setCursosPorNivel">
+                         v-model="form.area">
             <template slot="first">
               <option :value="null">Selecione...</option>
             </template>
           </b-form-select>
         </b-form-group>
 
-        <b-form-group label="Curso"
-                      label-for="curso">
-          <b-form-select id="curso"
-                         name="curso"
-                         :options="filtedCursos"
+        <b-form-group label="Tipo de curso"
+                      label-for="tipo">
+          <b-form-select id="tipo"
+                         name="tipo"
+                         :options="tiposDeCurso"
                          required
-                         v-model="form.curso">
+                         v-model="form.tipo">
             <template slot="first">
               <option :value="null">Selecione...</option>
             </template>
@@ -132,13 +129,13 @@
   import FormModal from "../../layouts/FormModal";
 
   export default {
-    name: "Alunos",
+    name: "Cursos",
     components: { FormModal },
     data () {
       return {
-        title: 'Alunos',
+        title: 'Cursos',
         items: [],
-        url: '/alunos',
+        url: '/cursos',
         method: '',
         modalTitle: '',
         error: false,
@@ -148,21 +145,13 @@
           //OBS: os campos que não estão presentes aqui, são os campos personalizados!
           { key: 'id', label: 'Id', type: 'number', hidden: true},
           { key: 'nome', label: 'Nome', type: 'text'},
-          { key: 'anoIngresso', label: 'Ano de ingresso', type: 'date' },
-          { key: 'telefone', label: 'Telefone', type: 'number'},
-          { key: 'rg', label: 'Rg', type: 'number'},
-          { key: 'cpf', label: 'Cpf', type: 'number'},
-          { key: 'naturalidade', label: 'Naturalidade', type: 'text'},
-          { key: 'nomeMae', label: 'Nome da mãe', type: 'text'},
-          { key: 'endereco', label: 'Endereço', type: 'text'},
-          { key: 'periodoIngresso', label: 'Periodo de ingresso', type: 'select', options: {'1': 'Primeiro semestre', '2': 'Segundo semestre'}},
+          { key: 'sigla', label: 'Sigla', type: 'text' },
         ],
         table_fields: [
-          { key: 'matricula', label: 'Matricula', sortable: true},
-          { key: 'nome', label: 'Nome', sortable: true, 'class': 'text-center' },
-          { key: 'curso', label: 'Curso/Graduação', sortable: true },
-          { key: 'anoIngresso', label: 'Ano de ingresso', sortable: true },
-          { key: 'telefone', label: 'Telefone'},
+          { key: 'nome', label: 'Nome', sortable: true },
+          { key: 'sigla', label: 'Sigla', sortable: true },
+          { key: 'area', label: 'Área de conhecimento', sortable: true },
+          { key: 'tipo', label: 'Tipo de curso', sortable: true },
           { key: 'actions', label: 'Ações' }
         ],
         form: {},//todos os campos do form
@@ -174,9 +163,8 @@
         sortDesc: false,
         sortDirection: 'asc',
         filter: null,
-        cursos: [],
-        filtedCursos: [],
-        niveisDeGraduacao: {},
+        areasDeConhecimento: [],
+        tiposDeCurso: {},
 
         idToDelete: null,
         indexToDelete: null,
@@ -185,12 +173,12 @@
       }
     },
     created() {
-      this.getAllAlunos()
-      this.getAllNiveis()
       this.getAllCursos()
+      this.getAllAreas()
+      this.getAllTiposDeCurso()
     },
     methods: {
-      getAllAlunos () {
+      getAllCursos() {
 
         this.$http.get(this.url)
           .then(data => {
@@ -199,10 +187,9 @@
 
               this.items = data.data
 
-              console.log(data.data)
-
               this.totalRows = this.items.length
 
+              //seta os campos do form de forma generica
               this.setFormFields(data.data[0])
 
             }
@@ -211,8 +198,8 @@
           .catch((error) => {
             console.log(error)
             this.$toast.error({
-              title:'Informação',
-              message:'Ops, ocorreu algum erro',
+              title: 'Informação',
+              message: 'Ops, ocorreu algum erro',
               position: 'top right',
               progressBar: true,
               showDuration: 1000,
@@ -222,45 +209,21 @@
           })
 
       },
-      getAllNiveis () {
+      getAllAreas() {
 
-        this.$http.get(this.url + '/tipos_de_niveis')
-          .then(data => {
-
-            if (data.data.length > 0) {
-              this.niveisDeGraduacao = data.data
-            }
-
-          })
-          .catch((error) => {
-            console.log(error)
-            this.$toast.error({
-              title:'Informação',
-              message:'Ops, ocorreu algum erro',
-              position: 'top right',
-              progressBar: true,
-              showDuration: 1000,
-              hideDuration: 1000,
-              timeOut: 5000
-            })
-          })
-
-      },
-      getAllCursos () {
-
-        this.$http.get('/cursos')
+        this.$http.get('/areas_de_conhecimento')
           .then(data => {
 
             if (data.data.length > 0) {
 
-              var cursos = []
+              var areas = []
               data.data.forEach(function (obj) {
 
-                cursos.push({text: obj['nome'], value: obj['id'], disabled: false, tipo: obj['tipo']})
+                areas.push({text: obj['nome'], value: obj['id'], disabled: false})
 
               })
 
-              this.cursos = cursos
+              this.areasDeConhecimento = areas
 
             }
 
@@ -268,8 +231,8 @@
           .catch((error) => {
             console.log(error)
             this.$toast.error({
-              title:'Informação',
-              message:'Ops, ocorreu algum erro',
+              title: 'Informação',
+              message: 'Ops, ocorreu algum erro',
               position: 'top right',
               progressBar: true,
               showDuration: 1000,
@@ -279,41 +242,31 @@
           })
 
       },
-      setCursosPorNivel (evt) {
+      getAllTiposDeCurso() {
 
-        var value = evt
-        this.form.nivel = value//obs: tem  que setar aqui, se n pega o valor desatualizado no model
+        this.$http.get(this.url + '/tipos_de_cursos')
+          .then(data => {
 
-        switch(value){
-          case 'GRADUACAO': case 'ESPECIALIZACAO': case 'MESTRADO': case 'DOUTORADO': case 'POSGRADUACAO':
-            this.listFiltedCursos()
-            break
-          default:
-            this.filtedCursos = []
-            break
-        }
+            if (data.data.length > 0) {
+              this.tiposDeCurso = data.data
+            }
 
-      },
-      filtrarPorNivel(value) {
-        console.log(value['tipo'], this.form.nivel)
-        return value['tipo'] == this.form.nivel
-      },
-      listFiltedCursos() {
-
-        var cursosFiltrados = this.cursos.filter(this.filtrarPorNivel)
-
-        this.filtedCursos = []
-        var cursos = []
-        cursosFiltrados.forEach(function (obj) {
-
-          cursos.push(obj)
-
-        })
-
-        this.filtedCursos = cursos
+          })
+          .catch((error) => {
+            console.log(error)
+            this.$toast.error({
+              title: 'Informação',
+              message: 'Ops, ocorreu algum erro',
+              position: 'top right',
+              progressBar: true,
+              showDuration: 1000,
+              hideDuration: 1000,
+              timeOut: 5000
+            })
+          })
 
       },
-      setFormFields(data) {
+      setFormFields(data) {//precisa desse metd. msm:?????
 
         var campos = {}
         Object.keys(data).forEach(function (key) {
@@ -342,13 +295,10 @@
           this.method = 'put'
           this.indexToEdit = index
 
-          //carrega a lista de cursos filtradas no select de acordo com o valor de 'nivel'
-          this.listFiltedCursos()
-
           //seta o valor do id do curso no select de curso (pois curso vem como obj não compativel com o select)
-          if (item['curso'].hasOwnProperty("id")) {
+          if (item['area'].hasOwnProperty("id")) {
 
-            this.form.curso = item['curso']['id']
+            this.form.area = item['area']['id']
 
           }
 
@@ -503,10 +453,9 @@
         this.$root.$emit('bv::hide::modal', 'modal-add-edit')
         this.resetModal()
       }
+    },
 
-    }
   }
-
 </script>
 
 <style scoped>

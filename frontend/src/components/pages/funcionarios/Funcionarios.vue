@@ -8,7 +8,7 @@
       <b-col>
 
         <h1 id="title-page" class="text-left">{{title}}</h1>
-        <b-button @click.stop="showModal('Cadastrar', null, null, $event.target)" id="btn-cadastrar" variant="primary" style="display: inline-block;">Cadastrar aluno</b-button>
+        <b-button @click.stop="showModal('Cadastrar', null, null, $event.target)" id="btn-cadastrar" variant="primary" style="display: inline-block;">Cadastrar funcionario</b-button>
 
       </b-col>
 
@@ -55,9 +55,7 @@
              id="table-listar"
     >
 
-      <template slot="curso" slot-scope="row">{{row.value.nome}} - {{row.value.tipo}}</template>
-
-      <template slot="anoIngresso" slot-scope="row">{{ row.value | moment("YYYY") }}</template>
+      <template slot="permissoes" slot-scope="row">{{(row.value[0].nome == 'ROLE_ADMIN') ? 'Administrador' : 'Operador'}}</template>
 
       <template slot="actions" slot-scope="row">
 
@@ -85,27 +83,13 @@
 
       <template slot="campos_personalizados">
 
-        <b-form-group label="Nível de graduação"
-                      label-for="nivel">
-          <b-form-select id="nivel"
-                         name="nivel"
-                         :options="niveisDeGraduacao"
+        <b-form-group label="Permissões"
+                      label-for="permissoes">
+          <b-form-select id="permissoes"
+                         name="permissoes"
+                         :options="tiposDePermissoes"
                          required
-                         v-model="form.nivel"
-                         @change="setCursosPorNivel">
-            <template slot="first">
-              <option :value="null">Selecione...</option>
-            </template>
-          </b-form-select>
-        </b-form-group>
-
-        <b-form-group label="Curso"
-                      label-for="curso">
-          <b-form-select id="curso"
-                         name="curso"
-                         :options="filtedCursos"
-                         required
-                         v-model="form.curso">
+                         v-model="form.permissoes">
             <template slot="first">
               <option :value="null">Selecione...</option>
             </template>
@@ -132,13 +116,13 @@
   import FormModal from "../../layouts/FormModal";
 
   export default {
-    name: "Alunos",
+    name: "Funcionarios",
     components: { FormModal },
     data () {
       return {
-        title: 'Alunos',
+        title: 'Funcionarios',
         items: [],
-        url: '/alunos',
+        url: '/usuarios',
         method: '',
         modalTitle: '',
         error: false,
@@ -148,21 +132,19 @@
           //OBS: os campos que não estão presentes aqui, são os campos personalizados!
           { key: 'id', label: 'Id', type: 'number', hidden: true},
           { key: 'nome', label: 'Nome', type: 'text'},
-          { key: 'anoIngresso', label: 'Ano de ingresso', type: 'date' },
           { key: 'telefone', label: 'Telefone', type: 'number'},
           { key: 'rg', label: 'Rg', type: 'number'},
           { key: 'cpf', label: 'Cpf', type: 'number'},
           { key: 'naturalidade', label: 'Naturalidade', type: 'text'},
-          { key: 'nomeMae', label: 'Nome da mãe', type: 'text'},
           { key: 'endereco', label: 'Endereço', type: 'text'},
-          { key: 'periodoIngresso', label: 'Periodo de ingresso', type: 'select', options: {'1': 'Primeiro semestre', '2': 'Segundo semestre'}},
+          { key: 'username', label: 'Nome de usuário', type: 'text', hidden: true},
+          { key: 'password', label: 'Senha', type: 'password', hidden: true},
         ],
         table_fields: [
-          { key: 'matricula', label: 'Matricula', sortable: true},
-          { key: 'nome', label: 'Nome', sortable: true, 'class': 'text-center' },
-          { key: 'curso', label: 'Curso/Graduação', sortable: true },
-          { key: 'anoIngresso', label: 'Ano de ingresso', sortable: true },
-          { key: 'telefone', label: 'Telefone'},
+          { key: 'nome', label: 'Nome', sortable: true },
+          { key: 'telefone', label: 'Telefone', sortable: true },
+          { key: 'endereco', label: 'Endereço', sortable: true },
+          { key: 'permissoes', label: 'Permissões', sortable: true },
           { key: 'actions', label: 'Ações' }
         ],
         form: {},//todos os campos do form
@@ -174,9 +156,7 @@
         sortDesc: false,
         sortDirection: 'asc',
         filter: null,
-        cursos: [],
-        filtedCursos: [],
-        niveisDeGraduacao: {},
+        tiposDePermissoes: [],
 
         idToDelete: null,
         indexToDelete: null,
@@ -185,12 +165,11 @@
       }
     },
     created() {
-      this.getAllAlunos()
-      this.getAllNiveis()
-      this.getAllCursos()
+      this.getAllUsuarios()
+      this.getAllPermissoes()
     },
     methods: {
-      getAllAlunos () {
+      getAllUsuarios() {
 
         this.$http.get(this.url)
           .then(data => {
@@ -199,10 +178,9 @@
 
               this.items = data.data
 
-              console.log(data.data)
-
               this.totalRows = this.items.length
 
+              //seta os campos do form de forma generica
               this.setFormFields(data.data[0])
 
             }
@@ -211,8 +189,8 @@
           .catch((error) => {
             console.log(error)
             this.$toast.error({
-              title:'Informação',
-              message:'Ops, ocorreu algum erro',
+              title: 'Informação',
+              message: 'Ops, ocorreu algum erro',
               position: 'top right',
               progressBar: true,
               showDuration: 1000,
@@ -222,45 +200,21 @@
           })
 
       },
-      getAllNiveis () {
+      getAllPermissoes() {
 
-        this.$http.get(this.url + '/tipos_de_niveis')
-          .then(data => {
-
-            if (data.data.length > 0) {
-              this.niveisDeGraduacao = data.data
-            }
-
-          })
-          .catch((error) => {
-            console.log(error)
-            this.$toast.error({
-              title:'Informação',
-              message:'Ops, ocorreu algum erro',
-              position: 'top right',
-              progressBar: true,
-              showDuration: 1000,
-              hideDuration: 1000,
-              timeOut: 5000
-            })
-          })
-
-      },
-      getAllCursos () {
-
-        this.$http.get('/cursos')
+        this.$http.get('/permissoes')
           .then(data => {
 
             if (data.data.length > 0) {
 
-              var cursos = []
+              var permissoes = []
               data.data.forEach(function (obj) {
 
-                cursos.push({text: obj['nome'], value: obj['id'], disabled: false, tipo: obj['tipo']})
+                permissoes.push({text: obj['nome'], value: obj['id'], disabled: false})
 
               })
 
-              this.cursos = cursos
+              this.tiposDePermissoes = permissoes
 
             }
 
@@ -268,8 +222,8 @@
           .catch((error) => {
             console.log(error)
             this.$toast.error({
-              title:'Informação',
-              message:'Ops, ocorreu algum erro',
+              title: 'Informação',
+              message: 'Ops, ocorreu algum erro',
               position: 'top right',
               progressBar: true,
               showDuration: 1000,
@@ -279,41 +233,7 @@
           })
 
       },
-      setCursosPorNivel (evt) {
-
-        var value = evt
-        this.form.nivel = value//obs: tem  que setar aqui, se n pega o valor desatualizado no model
-
-        switch(value){
-          case 'GRADUACAO': case 'ESPECIALIZACAO': case 'MESTRADO': case 'DOUTORADO': case 'POSGRADUACAO':
-            this.listFiltedCursos()
-            break
-          default:
-            this.filtedCursos = []
-            break
-        }
-
-      },
-      filtrarPorNivel(value) {
-        console.log(value['tipo'], this.form.nivel)
-        return value['tipo'] == this.form.nivel
-      },
-      listFiltedCursos() {
-
-        var cursosFiltrados = this.cursos.filter(this.filtrarPorNivel)
-
-        this.filtedCursos = []
-        var cursos = []
-        cursosFiltrados.forEach(function (obj) {
-
-          cursos.push(obj)
-
-        })
-
-        this.filtedCursos = cursos
-
-      },
-      setFormFields(data) {
+      setFormFields(data) {//precisa desse metd. msm:?????
 
         var campos = {}
         Object.keys(data).forEach(function (key) {
@@ -326,9 +246,14 @@
       showModal(title, item, index, event) {
 
         if (item == null) {
+
           this.modalTitle = 'Cadastrar'
           this.form = {}
           this.method = 'post'
+
+          //esconde ou mostra os campos de login
+          this.showLoginFields(false)
+
         } else {
 
           //seta o item da row, nos campos do form
@@ -342,13 +267,13 @@
           this.method = 'put'
           this.indexToEdit = index
 
-          //carrega a lista de cursos filtradas no select de acordo com o valor de 'nivel'
-          this.listFiltedCursos()
+          //esconde ou mostra os campos de login
+          this.showLoginFields(true)
 
           //seta o valor do id do curso no select de curso (pois curso vem como obj não compativel com o select)
-          if (item['curso'].hasOwnProperty("id")) {
+          if (item['permissoes'][0].hasOwnProperty("id")) {
 
-            this.form.curso = item['curso']['id']
+            this.form.permissoes = item['permissoes'][0]['id']
 
           }
 
@@ -356,6 +281,15 @@
 
         //abre modal
         this.$root.$emit('bv::show::modal', 'modal-add-edit', event)
+
+      },
+      showLoginFields (value) {
+
+        this.modal_form_fields.forEach(function (item) {
+          if (item.hasOwnProperty("hidden") && item['key'] !== 'id') {
+            item['hidden'] = value
+          }
+        })
 
       },
       showDeleteModal(title, item, index, event) {
@@ -437,6 +371,8 @@
             })
             .catch((error) => {
 
+              console.log(error.response.data)
+
               this.error = true
 
               this.listErrosHandler(error)
@@ -444,6 +380,12 @@
             })
 
         } else {
+
+          //deleta campos desnecessarios (campos de autenticação do security)
+          delete this.form['accountNonExpired']
+          delete this.form['accountNonLocked']
+          delete this.form['authorities']
+          delete this.form['credentialsNonExpired']
 
           this.$http.put(this.url + '/' + formModal['id'], qs.stringify(this.form))
             .then(data => {
@@ -467,6 +409,8 @@
 
             })
             .catch((error) => {
+
+              console.log(error.response.data)
 
               this.error = true
 
@@ -503,10 +447,8 @@
         this.$root.$emit('bv::hide::modal', 'modal-add-edit')
         this.resetModal()
       }
-
-    }
+    },
   }
-
 </script>
 
 <style scoped>

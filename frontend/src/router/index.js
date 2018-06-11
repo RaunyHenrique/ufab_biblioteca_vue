@@ -5,6 +5,8 @@ import Logout from '../components/pages/auth/Logout'
 import MainLayout from '../components/layouts/MainLayout'
 import Home from '../components/pages/home/Home'
 import Alunos from '../components/pages/alunos/Alunos'
+import Cursos from '../components/pages/cursos/Cursos'
+import Funcionarios from '../components/pages/funcionarios/Funcionarios'
 import NotFound from '../components/pages/error/NotFound'
 
 Vue.use(Router)
@@ -36,6 +38,16 @@ const router = new Router({
           path: '/alunos',
           name: 'Alunos',
           component: Alunos,
+        },
+        {
+          path: '/cursos',
+          name: 'Cursos',
+          component: Cursos,
+        },
+        {
+          path: '/funcionarios',
+          name: 'Funcionarios',
+          component: Funcionarios,
         },
       ]
     },

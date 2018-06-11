@@ -21,19 +21,19 @@ public class Curso implements IFDependencia {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotEmpty(message=" Nome é obrigatório")
+	@NotEmpty(message="Nome é obrigatório")
 	private String nome;
 	
-	@NotEmpty(message=" Sigla do curso é obrigatório")
+	@NotEmpty(message="Sigla do curso é obrigatório")
 	private String sigla;
 
 	@ManyToOne(cascade=CascadeType.REFRESH)
-	@JoinColumn(name = "area_conhecimento_id",nullable=false)
-	@NotNull(message=" Area do conhecimento é obrigatório")
+	@JoinColumn(name = "area_conhecimento_id", nullable=false)
+	@NotNull(message="Area do conhecimento é obrigatório")
 	private AreaConhecimento area;
 
 	@Enumerated(EnumType.STRING)
-	@NotNull(message=" Tipo do curso é obrigatório")
+	@NotNull(message="Tipo do curso é obrigatório")
 	private Tipo_curso tipo;
 	
 	/**

@@ -2,7 +2,7 @@
 
   <div id="notFound">
 
-    <img src="@/assets/logo.png" class="center-block logo">
+    <img src="@/assets/logo.png" class="center-block">
 
     <div class="text-center col-sm-12">
       <h1>Você está perdido</h1>
@@ -23,5 +23,10 @@
 <style scoped>
   #notFound {
     padding: 10em;
+  }
+  .center-block {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
   }
 </style>

@@ -1,43 +1,36 @@
-package com.equipeRL.backend.Controllers;
+package com.equipeRL.backend.Controllers.resourcesControllers;
 
 import com.equipeRL.backend.Controllers.interfaces.ControllerCRUDInterface;
-import com.equipeRL.backend.Controllers.propertyEditors.PermissaoPropertyEditor;
+import com.equipeRL.backend.Models.AreaConhecimento;
 import com.equipeRL.backend.Models.Permissao;
-import com.equipeRL.backend.Models.Usuario;
-import com.equipeRL.backend.Services.UsuarioService;
 import com.equipeRL.backend.Services.exceptions.CustomErrorType;
+import com.equipeRL.backend.Services.resourcesServices.PermissoesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("${spring.data.rest.base-path}/usuarios")
-public class UsuariosController implements ControllerCRUDInterface<Usuario> {
+@RequestMapping("${spring.data.rest.base-path}/permissoes")
+public class PermissoesController implements ControllerCRUDInterface<Permissao> {
 
     @Autowired
-    private UsuarioService usuarioService;
-
-    @Autowired
-    private PermissaoPropertyEditor permissaoPropertyEditor;
+    private PermissoesService permissoesService;
 
     @GetMapping()
-    public ResponseEntity<List<Usuario>> listAll() {
+    public ResponseEntity<List<Permissao>> listAll() {
 
         try {
 
-            List<Usuario> usuarios = usuarioService.getAll();
+            List<Permissao> permissao = permissoesService.getAll();
 
-            return new ResponseEntity<>(usuarios, HttpStatus.OK);
+            return new ResponseEntity<>(permissao, HttpStatus.OK);
 
         }catch (Exception e) {
 
@@ -48,7 +41,7 @@ public class UsuariosController implements ControllerCRUDInterface<Usuario> {
     }
 
     @PostMapping()
-    public ResponseEntity<?> create(@Valid Usuario model, BindingResult result, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<?> create(@Valid Permissao model, BindingResult result, UriComponentsBuilder ucBuilder) {
 
         try {
 
@@ -58,17 +51,16 @@ public class UsuariosController implements ControllerCRUDInterface<Usuario> {
             }
 
             //verifica se já esta cadastrado
-            if (usuarioService.isExist(model)) {
-                return new ResponseEntity(new CustomErrorType("Não é possivel cadastrar o usuário com nome " +
+            if (permissoesService.isExist(model)) {
+                return new ResponseEntity(new CustomErrorType("Não é possivel cadastrar a permissão com nome " +
                         model.getNome() + " pois já está cadastrado."), HttpStatus.CONFLICT);
             }
 
-            //salva o aluno
-            //OBS: encriptação de senha esta sendo feito no service
-            usuarioService.save(model);
+            //salva a permissão
+            permissoesService.save(model);
 
             HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(ucBuilder.path("/api/usuarios/{id}").buildAndExpand(model.getId()).toUri());
+            headers.setLocation(ucBuilder.path("/api/permissoes/{id}").buildAndExpand(model.getId()).toUri());
 
             return new ResponseEntity<>(model, headers, HttpStatus.CREATED);
 
@@ -81,7 +73,7 @@ public class UsuariosController implements ControllerCRUDInterface<Usuario> {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") long id, @Valid Usuario model, BindingResult result) {
+    public ResponseEntity<?> update(@PathVariable("id") long id, @Valid Permissao model, BindingResult result) {
 
         try {
 
@@ -91,15 +83,15 @@ public class UsuariosController implements ControllerCRUDInterface<Usuario> {
             }
 
             //Verifica se está cadastrado
-            Usuario findUsuario = usuarioService.findById(id);
+            Permissao permissao = permissoesService.findById(id);
 
-            if (findUsuario == null) {
+            if (permissao == null) {
                 return new ResponseEntity(new CustomErrorType("Item de id = " + id + " não encontrado."),
                         HttpStatus.NOT_FOUND);
             }
 
-            //atualiza o usuario
-            usuarioService.update(model);
+            //atualiza a permissão
+            permissoesService.update(model);
 
             return new ResponseEntity<>(model, HttpStatus.OK);
 
@@ -116,15 +108,15 @@ public class UsuariosController implements ControllerCRUDInterface<Usuario> {
 
         try {
 
-            Usuario usuario = usuarioService.findById(id);
+            Permissao permissao = permissoesService.findById(id);
 
-            if (usuario == null) {
+            if (permissao == null) {
                 return new ResponseEntity(new CustomErrorType("Item de id = " + id + " não encontrado."),
                         HttpStatus.NOT_FOUND);
             }
 
             //deleta item
-            usuarioService.deleteById(id);
+            permissoesService.deleteById(id);
 
             return new ResponseEntity<>(HttpStatus.OK);
 
@@ -134,11 +126,6 @@ public class UsuariosController implements ControllerCRUDInterface<Usuario> {
 
         }
 
-    }
-
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(Permissao.class, permissaoPropertyEditor);
     }
 
 }

@@ -7,7 +7,7 @@ package com.equipeRL.backend.Models.enums;
  */
 public enum Tipo_curso {
 	
-	GRADUACAO("GRADUACAO"), POS_GRADUACAO("POS_GRADUACAO");
+	GRADUACAO("GRADUACAO"), POSGRADUACAO("POSGRADUACAO");
 	private String descricao;
 	private Tipo_curso(String descricao) {
 		this.descricao = descricao;

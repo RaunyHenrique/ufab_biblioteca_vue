@@ -16,20 +16,9 @@
 
         <div v-for="item in form_fields">
 
-          <!--input: id-->
-          <b-form-group v-if="item.type == 'id'">
-
-            <b-form-input style="display: none;"
-                          :id="item.key"
-                          :name="item.key"
-                          type="number"
-                          v-model="form_modal[item.key]">
-            </b-form-input>
-
-          </b-form-group>
-
-          <!--input: text, number e date-->
-          <b-form-group v-if="item.type == 'text' || item.type == 'number' || item.type == 'date'"
+          <!--input: text, number, password e date-->
+          <b-form-group v-if="item.type == 'text' || item.type == 'number' || item.type == 'date' || item.type == 'password'"
+                        :hidden="item.hidden"
                         :label="item.label"
                         :label-for="item.key">
 

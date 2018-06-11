@@ -8,6 +8,8 @@ import router from './router'
 import store from './store'
 import BootstrapVue from 'bootstrap-vue'
 import Vuelidate from 'vuelidate'
+import VueMoment from 'vue-moment'
+import CxltToastr from 'cxlt-vue2-toastr'
 
 Vue.config.productionTip = false
 Vue.config.devtools = true
@@ -23,6 +25,10 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.use(VueAxios, axios)
 
 Vue.use(Vuelidate)
+Vue.use(VueMoment)
+
+Vue.use(CxltToastr)
+import 'cxlt-vue2-toastr/dist/css/cxlt-vue2-toastr.css'
 
 new Vue({
   el: '#app',

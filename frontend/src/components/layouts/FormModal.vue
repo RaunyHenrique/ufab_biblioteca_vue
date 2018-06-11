@@ -89,8 +89,6 @@
   export default {
     name: "FormModal",
     props: {
-      url: String,
-      method: String,
       title: String,
       form_fields: Array,
       form: Object,

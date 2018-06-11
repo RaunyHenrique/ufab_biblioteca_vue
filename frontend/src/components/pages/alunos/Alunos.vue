@@ -50,13 +50,17 @@
              :sort-desc.sync="sortDesc"
              :sort-direction="sortDirection"
              @filtered="onFiltered"
+             :empty-filtered-text="'Nenhum resultado encontrado.'"
+             :empty-text="'Não há nenhum registro a ser mostrado.'"
              id="table-listar"
     >
 
       <template slot="curso" slot-scope="row">{{row.value.nome}} - {{row.value.tipo}}</template>
 
+      <template slot="anoIngresso" slot-scope="row">{{ row.value | moment("YYYY") }}</template>
+
       <template slot="actions" slot-scope="row">
-        <!-- We use @click.stop here to prevent a 'row-clicked' event from also happening -->
+
         <b-button variant="warning" size="sm" @click.stop="showModal('Editar', row.item, row.index, $event.target)" class="mr-1">
           Editar
         </b-button>
@@ -77,7 +81,7 @@
     </b-row>
 
     <!-- modal-add-edit -->
-    <form-modal :error="error" :list-erros="listErros" :modal_id="'modal-add-edit'" :title="'Cadastrar'" :form_fields="modal_form_fields" :form="form" v-on:ok_modal="submitForm">
+    <form-modal :error="error" :list-erros="listErros" :modal_id="'modal-add-edit'" :title="modalTitle" :form_fields="modal_form_fields" :form="form" v-on:ok_modal="submitForm">
 
       <template slot="campos_personalizados">
 
@@ -125,17 +129,17 @@
 
 <script>
 
-  // import { required } from "vuelidate/lib/validators"
   import FormModal from "../../layouts/FormModal";
 
   export default {
     name: "Alunos",
-    components: {FormModal},
+    components: { FormModal },
     data () {
       return {
         items: [],
         url: '/alunos',
         method: 'post',
+        modalTitle: '',
         error: false,
         listErros: [],
         modal_form_fields: [
@@ -184,17 +188,6 @@
       this.getAllNiveis()
       this.getAllCursos()
     },
-    // validations: function () {
-    //
-    //   var validacoes = {}
-    //   Object.keys(this.form).forEach(function (key) {
-    //     //qualquer exeção (não required) colocar para ignorar aqui
-    //     validacoes[key] = {required}
-    //   })
-    //
-    //   return validacoes
-    //
-    // },
     methods: {
       getAllAlunos () {
 
@@ -203,8 +196,6 @@
 
             this.items = data.data
 
-            console.log(this.items)
-
             this.totalRows = this.items.length
 
             this.setFormFields(data.data[0])
@@ -212,6 +203,15 @@
           })
           .catch((error) => {
             console.log(error)
+            this.$toast.error({
+              title:'Informação',
+              message:'Ops, ocorreu algum erro',
+              position: 'top right',
+              progressBar: true,
+              showDuration: 1000,
+              hideDuration: 1000,
+              timeOut: 5000
+            })
           })
 
       },
@@ -225,6 +225,15 @@
           })
           .catch((error) => {
             console.log(error)
+            this.$toast.error({
+              title:'Informação',
+              message:'Ops, ocorreu algum erro',
+              position: 'top right',
+              progressBar: true,
+              showDuration: 1000,
+              hideDuration: 1000,
+              timeOut: 5000
+            })
           })
 
       },
@@ -245,6 +254,15 @@
           })
           .catch((error) => {
             console.log(error)
+            this.$toast.error({
+              title:'Informação',
+              message:'Ops, ocorreu algum erro',
+              position: 'top right',
+              progressBar: true,
+              showDuration: 1000,
+              hideDuration: 1000,
+              timeOut: 5000
+            })
           })
 
       },
@@ -264,7 +282,7 @@
 
       },
       filtrarPorNivel(value) {
-        return value['tipo'] == this.form.nivel;
+        return value['tipo'] == this.form.nivel
       },
       listFiltedCursos() {
 
@@ -294,6 +312,7 @@
       showModal(title, item, index, event) {
 
         if (item == null) {
+          this.modalTitle = 'Cadastrar'
           this.form = {}
           this.url = '/alunos'
           this.method = 'post'
@@ -306,6 +325,7 @@
           })
           this.form = campos
 
+          this.modalTitle = 'Editar'
           this.url = '/alunos/' + item['id']
           this.method = 'put'
           this.indexToEdit = index
@@ -329,6 +349,8 @@
       showDeleteModal(title, item, index, event) {
         this.idToDelete = item['id']
         this.indexToDelete = index
+
+        //abre modal
         this.$root.$emit('bv::show::modal', 'modal-delete', event)
       },
       onFiltered (filteredItems) {
@@ -343,22 +365,40 @@
           this.$http.delete('/alunos/'+this.idToDelete)
             .then(data => {
 
+              //deleta item da table
               this.items.splice(this.indexToDelete, 1);
 
               this.idToDelete = null
               this.indexToDelete = null
 
+              this.$toast.success({
+                title:'Informação',
+                message:'Item deletado com sucesso',
+                position: 'top right',
+                progressBar: true,
+                showDuration: 1000,
+                hideDuration: 1000,
+                timeOut: 5000
+              })
+
             })
             .catch((error) => {
               console.log(error)
+              this.$toast.error({
+                title:'Informação',
+                message:'Ops, ocorreu algum erro',
+                position: 'top right',
+                progressBar: true,
+                showDuration: 1000,
+                hideDuration: 1000,
+                timeOut: 5000
+              })
             })
 
         }
 
       },
       submitForm (formModal) {
-
-        console.log(formModal)
 
         var qs = require('qs');
 
@@ -367,13 +407,20 @@
           this.$http.post(this.url, qs.stringify(formModal))
             .then(data => {
 
-              console.log(data.data)
-
               this.items.push(data.data)
 
               this.error = false
               this.handleSubmit()
 
+              this.$toast.success({
+                title:'Informação',
+                message:'Item criado com sucesso',
+                position: 'top right',
+                progressBar: true,
+                showDuration: 1000,
+                hideDuration: 1000,
+                timeOut: 5000
+              })
 
             })
             .catch((error) => {
@@ -389,14 +436,22 @@
           this.$http.put(this.url, qs.stringify(this.form))
             .then(data => {
 
-              console.log(data.data)
-
               this.error = false
               this.handleSubmit()
 
               this.$set(this.items, this.indexToEdit, data.data)
 
               this.indexToEdit = null
+
+              this.$toast.success({
+                title:'Informação',
+                message:'Item editado com sucesso',
+                position: 'top right',
+                progressBar: true,
+                showDuration: 1000,
+                hideDuration: 1000,
+                timeOut: 5000
+              })
 
             })
             .catch((error) => {
@@ -432,6 +487,7 @@
         this.form = {}
       },
       handleSubmit () {
+        //fecha modal
         this.$root.$emit('bv::hide::modal', 'modal-add-edit')
         this.resetModal()
       }

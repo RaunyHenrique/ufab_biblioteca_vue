@@ -150,7 +150,7 @@
     components: { FormModal },
     data () {
       return {
-        title: 'anais',
+        title: 'Anais',
         items: [],
         url: '/anais',
         method: '',

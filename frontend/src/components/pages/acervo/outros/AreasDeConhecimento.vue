@@ -111,7 +111,7 @@
       return {
         title: 'Áreas de conhecimento',
         items: [],
-        url: '/areas',
+        url: '/areas_de_conhecimento',
         method: '',
         modalTitle: '',
         error: false,

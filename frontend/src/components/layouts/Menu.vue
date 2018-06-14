@@ -20,18 +20,18 @@
 
         <b-nav-item-dropdown text="Acervo" right>
           <b-dropdown-header>Itens do acervo</b-dropdown-header>
-          <b-dropdown-item href="#">Livros</b-dropdown-item>
-          <b-dropdown-item href="#">Revistas</b-dropdown-item>
-          <b-dropdown-item href="#">TCC's</b-dropdown-item>
-          <b-dropdown-item href="#">Jornais</b-dropdown-item>
-          <b-dropdown-item href="#">Anais</b-dropdown-item>
-          <b-dropdown-item href="#">Midias Eletronicas</b-dropdown-item>
+          <b-dropdown-item to="/livros">Livros</b-dropdown-item>
+          <b-dropdown-item to="/revistas">Revistas</b-dropdown-item>
+          <b-dropdown-item to="/tccs">TCC's</b-dropdown-item>
+          <b-dropdown-item to="/jornais">Jornais</b-dropdown-item>
+          <b-dropdown-item to="/anais">Anais</b-dropdown-item>
+          <b-dropdown-item to="/midias">Midias Eletronicas</b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
           <b-dropdown-header>Outros</b-dropdown-header>
-          <b-dropdown-item href="#">Autores</b-dropdown-item>
-          <b-dropdown-item href="#">Editoras</b-dropdown-item>
-          <b-dropdown-item href="#">Áreas de conhecimento</b-dropdown-item>
-          <b-dropdown-item href="#">Temas</b-dropdown-item>
+          <b-dropdown-item to="/autores">Autores</b-dropdown-item>
+          <b-dropdown-item to="/editoras">Editoras</b-dropdown-item>
+          <b-dropdown-item to="/areas-de-conhecimento">Áreas de conhecimento</b-dropdown-item>
+          <b-dropdown-item to="/temas">Temas</b-dropdown-item>
         </b-nav-item-dropdown>
 
       </b-navbar-nav>

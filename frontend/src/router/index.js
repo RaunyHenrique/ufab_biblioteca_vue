@@ -7,6 +7,19 @@ import Home from '../components/pages/home/Home'
 import Alunos from '../components/pages/alunos/Alunos'
 import Cursos from '../components/pages/cursos/Cursos'
 import Funcionarios from '../components/pages/funcionarios/Funcionarios'
+
+import Anais from '../components/pages/acervo/Anais'
+import Livros from '../components/pages/acervo/Livros'
+import Revistas from '../components/pages/acervo/Revistas'
+import Tccs from '../components/pages/acervo/Tccs'
+import Jornais from '../components/pages/acervo/Jornais'
+import Midias from '../components/pages/acervo/Midias'
+
+import Autores from '../components/pages/acervo/outros/Autores'
+import Editoras from '../components/pages/acervo/outros/Editoras'
+import Temas from '../components/pages/acervo/outros/Temas'
+import AreasDeConhecimento from '../components/pages/acervo/outros/AreasDeConhecimento'
+
 import NotFound from '../components/pages/error/NotFound'
 
 Vue.use(Router)
@@ -48,6 +61,63 @@ const router = new Router({
           path: '/funcionarios',
           name: 'Funcionarios',
           component: Funcionarios,
+        },
+      ]
+    },
+    {
+      path: '/acervo',
+      component: MainLayout,
+      meta: { authRequired: true },
+      children: [
+        {
+          path: '/livros',
+          name: 'Livros',
+          component: Livros,
+        },
+        {
+          path: '/revistas',
+          name: 'Revistas',
+          component: Revistas,
+        },
+        {
+          path: '/tccs',
+          name: 'Tccs',
+          component: Tccs,
+        },
+        {
+          path: '/jornais',
+          name: 'Jornais',
+          component: Jornais,
+        },
+        {
+          path: '/anais',
+          name: 'Anais',
+          component: Anais,
+        },
+        {
+          path: '/midias',
+          name: 'Midias',
+          component: Midias,
+        },
+        {
+          path: '/autores',
+          name: 'Autores',
+          component: Autores,
+        },
+        {
+          path: '/editoras',
+          name: 'Editoras',
+          component: Editoras,
+        },
+        {
+          path: '/temas',
+          name: 'Temas',
+          component: Temas,
+        },
+        {
+          path: '/areas-de-conhecimento',
+          name: 'AreasDeConhecimento',
+          component: AreasDeConhecimento,
         },
       ]
     },

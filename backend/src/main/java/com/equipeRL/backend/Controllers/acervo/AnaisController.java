@@ -1,12 +1,11 @@
-package com.equipeRL.backend.Controllers;
+package com.equipeRL.backend.Controllers.acervo;
 
 import com.equipeRL.backend.Controllers.interfaces.ControllerCRUDInterface;
 import com.equipeRL.backend.Controllers.propertyEditors.CidadePropertyEditor;
 import com.equipeRL.backend.Models.Cidade;
-import com.equipeRL.backend.Models.Curso;
 import com.equipeRL.backend.Models.acervo.Anal;
 import com.equipeRL.backend.Models.enums.Tipo_anal;
-import com.equipeRL.backend.Services.AnaisService;
+import com.equipeRL.backend.Services.acervo.AnaisService;
 import com.equipeRL.backend.Services.exceptions.CustomErrorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;

@@ -1,10 +1,9 @@
-package com.equipeRL.backend.Controllers;
+package com.equipeRL.backend.Controllers.acervo;
 
 import com.equipeRL.backend.Controllers.interfaces.ControllerCRUDInterface;
 import com.equipeRL.backend.Models.acervo.MidiasEletronicas;
-import com.equipeRL.backend.Models.enums.Tipo_curso;
 import com.equipeRL.backend.Models.enums.Tipo_midia;
-import com.equipeRL.backend.Services.MidiaService;
+import com.equipeRL.backend.Services.acervo.MidiaService;
 import com.equipeRL.backend.Services.exceptions.CustomErrorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

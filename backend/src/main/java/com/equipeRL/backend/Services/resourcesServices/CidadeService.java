@@ -1,11 +1,11 @@
-package com.equipeRL.backend.Services;
+package com.equipeRL.backend.Services.resourcesServices;
 
-import com.equipeRL.backend.Models.acervo.Jornal;
-import com.equipeRL.backend.Repositories.JornaisRepository;
+import com.equipeRL.backend.Models.Cidade;
+import com.equipeRL.backend.Repositories.CidadesRepository;
+import com.equipeRL.backend.Services.acervo.JornalService;
 import com.equipeRL.backend.Services.interfaces.ServiceInterface;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,28 +13,28 @@ import java.util.Optional;
 
 
 @Service
-public class JornalService implements ServiceInterface<Jornal> {
+public class CidadeService implements ServiceInterface<Cidade> {
 
 	private static Logger logger = Logger.getLogger(JornalService.class);
 
 	@Autowired
-	private JornaisRepository jornaisRepository;
+	private CidadesRepository cidadesRepository;
 
-    public List<Jornal> getAll() {
+    public List<Cidade> getAll() {
 
-        List<Jornal> jornais = jornaisRepository.findAll();
+        List<Cidade> cidades = cidadesRepository.findAll();
 
         logger.info("Itens listados com sucesso!");
 
-        return jornais;
+        return cidades;
 
     }
 
-    public boolean isExist(Jornal model) {
+    public boolean isExist(Cidade model) {
 
-        Optional<Jornal> findJornal = jornaisRepository.findByTituloIgnoreCase(model.getTitulo());
+        Optional<Cidade> findCidade = cidadesRepository.findByNomeIgnoreCase(model.getNome());
 
-        if (findJornal.isPresent()) {
+        if (findCidade.isPresent()) {
 
             logger.error("Item já existe no banco de dados.");
             return true;
@@ -46,20 +46,20 @@ public class JornalService implements ServiceInterface<Jornal> {
 
     }
 
-    public void save(Jornal model) {
+    public void save(Cidade model) {
 
-        jornaisRepository.save(model);
+        cidadesRepository.save(model);
         logger.info("Item salvo com sucesso.");
 
     }
 
-    public Jornal findById(long id) {
+    public Cidade findById(long id) {
 
-        Optional<Jornal> findJornal = jornaisRepository.findById(id);
+        Optional<Cidade> findCidade = cidadesRepository.findById(id);
 
-        if (findJornal.isPresent()) {
+        if (findCidade.isPresent()) {
             logger.info("Item encontrado.");
-            return findJornal.get();
+            return findCidade.get();
         }
 
         logger.warn("Item não encontrado.");
@@ -67,16 +67,16 @@ public class JornalService implements ServiceInterface<Jornal> {
 
     }
 
-    public void update(Jornal model) {
+    public void update(Cidade model) {
 
-        jornaisRepository.save(model);
+        cidadesRepository.save(model);
         logger.info("Item atualizado com sucesso.");
 
     }
 
     public void deleteById(long id) {
 
-        jornaisRepository.deleteById(id);
+        cidadesRepository.deleteById(id);
         logger.info("Item deletado com sucesso.");
 
     }

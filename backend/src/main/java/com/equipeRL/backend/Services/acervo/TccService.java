@@ -1,11 +1,10 @@
-package com.equipeRL.backend.Services;
+package com.equipeRL.backend.Services.acervo;
 
 import com.equipeRL.backend.Models.acervo.Tcc;
 import com.equipeRL.backend.Repositories.TccsRepository;
 import com.equipeRL.backend.Services.interfaces.ServiceInterface;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

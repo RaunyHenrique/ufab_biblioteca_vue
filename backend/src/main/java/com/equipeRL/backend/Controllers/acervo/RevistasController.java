@@ -1,8 +1,8 @@
-package com.equipeRL.backend.Controllers;
+package com.equipeRL.backend.Controllers.acervo;
 
 import com.equipeRL.backend.Controllers.interfaces.ControllerCRUDInterface;
-import com.equipeRL.backend.Models.acervo.Jornal;
-import com.equipeRL.backend.Services.JornalService;
+import com.equipeRL.backend.Models.acervo.Revista;
+import com.equipeRL.backend.Services.acervo.RevistaService;
 import com.equipeRL.backend.Services.exceptions.CustomErrorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -13,24 +13,23 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping("${spring.data.rest.base-path}/jornais")
-public class JornaisController implements ControllerCRUDInterface<Jornal> {
+@RequestMapping("${spring.data.rest.base-path}/revistas")
+public class RevistasController implements ControllerCRUDInterface<Revista> {
 
     @Autowired
-    private JornalService jornalService;
+    private RevistaService revistaService;
 
     @GetMapping()
-    public ResponseEntity<List<Jornal>> listAll() {
+    public ResponseEntity<List<Revista>> listAll() {
 
         try {
 
-            List<Jornal> jornais = jornalService.getAll();
+            List<Revista> revistas = revistaService.getAll();
 
-            return new ResponseEntity<>(jornais, HttpStatus.OK);
+            return new ResponseEntity<>(revistas, HttpStatus.OK);
 
         }catch (Exception e) {
 
@@ -41,7 +40,7 @@ public class JornaisController implements ControllerCRUDInterface<Jornal> {
     }
 
     @PostMapping()
-    public ResponseEntity<?> create(@Valid Jornal jornal, BindingResult result, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<?> create(@Valid Revista revista, BindingResult result, UriComponentsBuilder ucBuilder) {
 
         try {
 
@@ -51,18 +50,17 @@ public class JornaisController implements ControllerCRUDInterface<Jornal> {
             }
 
             //verifica se já esta cadastrado
-            if (jornalService.isExist(jornal)) {
-                return new ResponseEntity(new CustomErrorType("Não é possivel cadastrar o jornal com título " +
-                        jornal.getTitulo()+ " pois já está cadastrado."), HttpStatus.CONFLICT);
+            if (revistaService.isExist(revista)) {
+                return new ResponseEntity(new CustomErrorType("Não é possivel cadastrar a revista com título " +
+                        revista.getTitulo()+ " pois já está cadastrado."), HttpStatus.CONFLICT);
             }
 
-            //salva o jornal
-            jornalService.save(jornal);
+            revistaService.save(revista);
 
             HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(ucBuilder.path("/api/jornais/{id}").buildAndExpand(jornal.getId()).toUri());
+            headers.setLocation(ucBuilder.path("/api/revistas/{id}").buildAndExpand(revista.getId()).toUri());
 
-            return new ResponseEntity<>(jornal, headers, HttpStatus.CREATED);
+            return new ResponseEntity<>(revista, headers, HttpStatus.CREATED);
 
         } catch (Exception e) {
 
@@ -73,7 +71,7 @@ public class JornaisController implements ControllerCRUDInterface<Jornal> {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") long id, @Valid Jornal jornal, BindingResult result) {
+    public ResponseEntity<?> update(@PathVariable("id") long id, @Valid Revista revista, BindingResult result) {
 
         try {
 
@@ -83,17 +81,17 @@ public class JornaisController implements ControllerCRUDInterface<Jornal> {
             }
 
             //Verifica se está cadastrado
-            Jornal findJornal = jornalService.findById(id);
+            Revista findRevista = revistaService.findById(id);
 
-            if (findJornal == null) {
+            if (findRevista == null) {
                 return new ResponseEntity(new CustomErrorType("Item de id = " + id + " não encontrado."),
                         HttpStatus.NOT_FOUND);
             }
 
             //atualiza o curso
-            jornalService.update(jornal);
+            revistaService.update(revista);
 
-            return new ResponseEntity<>(jornal, HttpStatus.OK);
+            return new ResponseEntity<>(revista, HttpStatus.OK);
 
         } catch (Exception e) {
 
@@ -108,15 +106,15 @@ public class JornaisController implements ControllerCRUDInterface<Jornal> {
 
         try {
 
-            Jornal jornal = jornalService.findById(id);
+            Revista revista = revistaService.findById(id);
 
-            if (jornal == null) {
+            if (revista == null) {
                 return new ResponseEntity(new CustomErrorType("Item de id = " + id + " não encontrado."),
                         HttpStatus.NOT_FOUND);
             }
 
             //deleta item
-            jornalService.deleteById(id);
+            revistaService.deleteById(id);
 
             return new ResponseEntity<>(HttpStatus.OK);
 

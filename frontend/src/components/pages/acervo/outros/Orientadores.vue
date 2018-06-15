@@ -8,7 +8,7 @@
       <b-col>
 
         <h1 id="title-page" class="text-left">{{title}}</h1>
-        <b-button @click.stop="showModal('Cadastrar', null, null, $event.target)" id="btn-cadastrar" variant="primary" style="display: inline-block;">Cadastrar midia</b-button>
+        <b-button @click.stop="showModal('Cadastrar', null, null, $event.target)" id="btn-cadastrar" variant="primary" style="display: inline-block;">Cadastrar orientador</b-button>
 
       </b-col>
 
@@ -55,7 +55,7 @@
              id="table-listar"
     >
 
-      <template slot="data" slot-scope="row">{{ row.value | moment("DD/MM/YYYY") }}</template>
+      <template slot="area" slot-scope="row">{{row.value.nome}}</template>
 
       <template slot="actions" slot-scope="row">
 
@@ -83,19 +83,6 @@
 
       <template slot="campos_personalizados">
 
-        <b-form-group label="Tipo de midia"
-                      label-for="tipo">
-          <b-form-select id="tipo"
-                         name="tipo"
-                         :options="tipos"
-                         required
-                         v-model="form.tipo">
-            <template slot="first">
-              <option :value="null">Selecione...</option>
-            </template>
-          </b-form-select>
-        </b-form-group>
-
       </template>
 
     </form-modal>
@@ -113,16 +100,16 @@
 
 <script>
 
-  import FormModal from "../../layouts/FormModal"
+  import FormModal from "../../../layouts/FormModal";
 
   export default {
-    name: "Midias",
+    name: "Orientadores",
     components: { FormModal },
     data () {
       return {
-        title: 'Midias',
+        title: 'orientadores',
         items: [],
-        url: '/midias',
+        url: '/orientadores',
         method: '',
         modalTitle: '',
         error: false,
@@ -131,13 +118,12 @@
           //OBS: os campos mapeados aqui, são mapeados no form!
           //OBS: os campos que não estão presentes aqui, são os campos personalizados!
           { key: 'id', label: 'Id', type: 'number', hidden: true},
-          { key: 'titulo', label: 'Titulo', type: 'text'},
-          { key: 'data', label: 'Data de gravação', type: 'date' },
+          { key: 'nome', label: 'Nome', type: 'text'},
+          { key: 'formacao', label: 'Formação', type: 'text' },
         ],
         table_fields: [
-          { key: 'titulo', label: 'Titulo', sortable: true },
-          { key: 'data', label: 'Data de gravação', sortable: true },
-          { key: 'tipo', label: 'Tipo de midia', sortable: true },
+          { key: 'nome', label: 'Nome', sortable: true },
+          { key: 'formacao', label: 'Formação', sortable: true },
           { key: 'actions', label: 'Ações' }
         ],
         form: {},//todos os campos do form
@@ -149,7 +135,6 @@
         sortDesc: false,
         sortDirection: 'asc',
         filter: null,
-        tipos: [],
 
         idToDelete: null,
         indexToDelete: null,
@@ -158,11 +143,11 @@
       }
     },
     created() {
-      this.getAllCursos()
-      this.getAllTipos()
+      this.getAllOrientadores()
     },
     methods: {
-      getAllCursos() {
+
+      getAllOrientadores() {
 
         this.$http.get(this.url)
           .then(data => {
@@ -176,30 +161,6 @@
               //seta os campos do form de forma generica
               this.setFormFields(data.data[0])
 
-            }
-
-          })
-          .catch((error) => {
-            console.log(error)
-            this.$toast.error({
-              title: 'Informação',
-              message: 'Ops, ocorreu algum erro',
-              position: 'top right',
-              progressBar: true,
-              showDuration: 1000,
-              hideDuration: 1000,
-              timeOut: 5000
-            })
-          })
-
-      },
-      getAllTipos() {
-
-        this.$http.get(this.url + '/tipos_de_midias')
-          .then(data => {
-
-            if (data.data.length > 0) {
-              this.tipos = data.data
             }
 
           })
@@ -397,7 +358,7 @@
         this.$root.$emit('bv::hide::modal', 'modal-add-edit')
         this.resetModal()
       }
-    }
+    },
   }
 
 </script>

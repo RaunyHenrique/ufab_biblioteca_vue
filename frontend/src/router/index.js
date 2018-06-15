@@ -19,6 +19,7 @@ import Autores from '../components/pages/acervo/outros/Autores'
 import Editoras from '../components/pages/acervo/outros/Editoras'
 import Temas from '../components/pages/acervo/outros/Temas'
 import AreasDeConhecimento from '../components/pages/acervo/outros/AreasDeConhecimento'
+import Orientadores from '../components/pages/acervo/outros/Orientadores'
 
 import NotFound from '../components/pages/error/NotFound'
 
@@ -118,6 +119,11 @@ const router = new Router({
           path: '/areas-de-conhecimento',
           name: 'AreasDeConhecimento',
           component: AreasDeConhecimento,
+        },
+        {
+          path: '/orientadores',
+          name: 'orientadores',
+          component: Orientadores,
         },
       ]
     },

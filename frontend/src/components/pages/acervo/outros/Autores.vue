@@ -143,7 +143,7 @@
       }
     },
     created() {
-      this.getAllJornais()
+      this.getAllAutores()
     },
     methods: {
       getAllAutores() {

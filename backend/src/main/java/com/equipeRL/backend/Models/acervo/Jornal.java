@@ -2,7 +2,7 @@ package com.equipeRL.backend.Models.acervo;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * Classe utilizada como modelo para um objeto do tipo Jornal.

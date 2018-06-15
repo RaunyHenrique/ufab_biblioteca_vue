@@ -155,11 +155,11 @@
       }
     },
     created() {
-      this.getAllJornais()
+      this.getAllTemas()
       this.getAllAreas()
     },
     methods: {
-      getAllAutores() {
+      getAllTemas() {
 
         this.$http.get(this.url)
           .then(data => {

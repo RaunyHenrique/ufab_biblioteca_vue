@@ -55,7 +55,9 @@
              id="table-listar"
     >
 
-      <template slot="area" slot-scope="row">{{row.value.nome}}</template>
+      <template slot="data" slot-scope="row">{{ row.value | moment("DD/MM/YYYY") }}</template>
+
+      <template slot="autor" slot-scope="row">{{ row.value.nome }}</template>
 
       <template slot="actions" slot-scope="row">
 
@@ -203,6 +205,7 @@
     created() {
       this.getAllTccs()
       this.getAllAutores()
+      this.getAllOrientadores()
       this.getAllTiposDeTccs()
       this.getAllCidades()
     },
@@ -272,9 +275,42 @@
           })
 
       },
+      getAllOrientadores () {
+
+        this.$http.get('/orientadores')
+          .then(data => {
+
+            if (data.data.length > 0) {
+
+              var orientadores = []
+              data.data.forEach(function (obj) {
+
+                orientadores.push({text: obj['nome'], value: obj['id'], disabled: false})
+
+              })
+
+              this.orientadores = orientadores
+
+            }
+
+          })
+          .catch((error) => {
+            console.log(error)
+            this.$toast.error({
+              title: 'Informação',
+              message: 'Ops, ocorreu algum erro',
+              position: 'top right',
+              progressBar: true,
+              showDuration: 1000,
+              hideDuration: 1000,
+              timeOut: 5000
+            })
+          })
+
+      },
       getAllTiposDeTccs () {
 
-        this.$http.get('/tipos_de_tccs')
+        this.$http.get('tccs/tipos_de_tcc')
           .then(data => {
 
             if (data.data.length > 0) {
@@ -306,7 +342,7 @@
               var cidades = []
               data.data.forEach(function (obj) {
 
-                cidades.push({text: obj['nome'], value: obj['id'], disabled: false})
+                cidades.push({text: obj['nome'], value: obj['cod_cidades'], disabled: false})
 
               })
 
@@ -359,9 +395,21 @@
           this.indexToEdit = index
 
           //seta o valor do id do curso no select de curso (pois curso vem como obj não compativel com o select)
-          if (item['area'].hasOwnProperty("id")) {
+          if (item['autor'].hasOwnProperty("id")) {
 
-            this.form.area = item['area']['id']
+            this.form.autor = item['autor']['id']
+
+          }
+
+          if (item['orientador'].hasOwnProperty("id")) {
+
+            this.form.orientador = item['orientador']['id']
+
+          }
+
+          if (item['cidade'].hasOwnProperty("cod_cidades")) {
+
+            this.form.cidade = item['cidade']['cod_cidades']
 
           }
 
@@ -521,5 +569,23 @@
 </script>
 
 <style scoped>
-
+  #table-listar {
+    margin-top: 16px;
+  }
+  #per-page-select {
+    text-align: left !important;
+  }
+  #per-page-select .custom-select {
+    width: 30% !important;
+  }
+  #ui-table {
+    margin-top: 16px;
+  }
+  #title-page {
+    float: left;
+  }
+  #btn-cadastrar {
+    float: right;
+    margin-bottom: 12px;
+  }
 </style>

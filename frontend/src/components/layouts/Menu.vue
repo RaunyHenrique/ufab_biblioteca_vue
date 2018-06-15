@@ -29,6 +29,7 @@
           <b-dropdown-divider></b-dropdown-divider>
           <b-dropdown-header>Outros</b-dropdown-header>
           <b-dropdown-item to="/autores">Autores</b-dropdown-item>
+          <b-dropdown-item to="/orientadores">Orientadores</b-dropdown-item>
           <b-dropdown-item to="/editoras">Editoras</b-dropdown-item>
           <b-dropdown-item to="/areas-de-conhecimento">Áreas de conhecimento</b-dropdown-item>
           <b-dropdown-item to="/temas">Temas</b-dropdown-item>

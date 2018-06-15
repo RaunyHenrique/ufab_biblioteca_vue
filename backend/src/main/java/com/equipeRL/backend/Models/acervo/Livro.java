@@ -3,15 +3,14 @@ package com.equipeRL.backend.Models.acervo;
 import com.equipeRL.backend.Models.Autor;
 import com.equipeRL.backend.Models.Editora;
 import com.equipeRL.backend.Models.Tema;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Classe utilizada como modelo para um objeto do tipo Livro.
@@ -24,21 +23,16 @@ import java.util.Set;
 @Table(name="livro")
 public class Livro extends ItemAcervo {
 	
-	@NotNull(message=" ISBN é obrigatório")
-	private int isbn;
+	@NotEmpty(message=" ISBN é obrigatório")
+	private String isbn;
 
+	@NotNull(message=" Autores é obrigatório")
 	@OneToMany(
 			targetEntity=Autor.class,
 			cascade=CascadeType.REFRESH,
 			fetch=FetchType.EAGER
 	)
-	@Fetch(FetchMode.SELECT)
-	@JoinTable(
-			name="autor_has_livro",
-			joinColumns=@JoinColumn(name="livro_id"),
-			inverseJoinColumns=@JoinColumn(name="autor_id")
-	)
-	private Set<Autor> autores;
+	private List<Autor> autores;
 
 	@ManyToOne(cascade=CascadeType.REFRESH)
 	@JoinColumn(name = "editora_id",nullable=false)
@@ -52,10 +46,6 @@ public class Livro extends ItemAcervo {
 	@JoinColumn(name = "tema_id",nullable=false)
 	@NotNull(message=" Tema é obrigatório")
 	private Tema tema;
-
-	@Transient
-	@NotEmpty(message = " Pelo menos um autor é obrigatório")
-	private Long id_autor;
 	
 	public Livro() {}
 	
@@ -69,7 +59,7 @@ public class Livro extends ItemAcervo {
 			setIsbn(livro.getIsbn());
 			setTitulo(livro.getTitulo());
 
-			Set<Autor> listaAutores = new HashSet<>();
+			List<Autor> listaAutores = new ArrayList<>();
 
 			for(Autor a: livro.getAutores()){
 				listaAutores.add(new Autor(a));
@@ -94,7 +84,7 @@ public class Livro extends ItemAcervo {
 	 * @param edicao edicao do livro
 	 * @param numero_paginas numero de paginas do livro
 	 */
-	public Livro(int isbn, String titulo, Set<Autor> autores, Editora editora, Date ano_publicacao, int edicao, int numero_paginas, Tema tema) {
+	public Livro(String isbn, String titulo, List<Autor> autores, Editora editora, Date ano_publicacao, int edicao, int numero_paginas, Tema tema) {
 		setIsbn(isbn);
 		setTitulo(titulo);
 		setAutores(autores);
@@ -105,19 +95,19 @@ public class Livro extends ItemAcervo {
 		setTema(tema);
 	}
 
-	public int getIsbn() {
+	public String getIsbn() {
 		return isbn;
 	}
 
-	public void setIsbn(int isbn) {
+	public void setIsbn(String isbn) {
 		this.isbn = isbn;
 	}
 
-	public Set<Autor> getAutores() {
+	public List<Autor> getAutores() {
 		return autores;
 	}
 
-	public void setAutores(Set<Autor> autores) {
+	public void setAutores(List<Autor> autores) {
 		this.autores = autores;
 	}
 
@@ -152,18 +142,25 @@ public class Livro extends ItemAcervo {
 	public void setTema(Tema tema) {
 		this.tema = tema;
 	}
-	
-	
-	public Long getId_autor() {
-		return id_autor;
-	}
-
-	public void setId_autor(Long id_autor) {
-		this.id_autor = id_autor;
-	}
 
 	public boolean validaItem() {
 		return true;
 	}
-	
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Livro livro = (Livro) o;
+		return numero_paginas == livro.numero_paginas &&
+				Objects.equals(isbn, livro.isbn) &&
+				Objects.equals(editora, livro.editora) &&
+				Objects.equals(tema, livro.tema);
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(isbn, editora, numero_paginas, tema);
+	}
 }

@@ -12,76 +12,60 @@ import java.util.Objects;
  */
 
 @Entity
-@Table(name="cidade")
+@Table(name="cidades")
 public class Cidade {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long cod_cidades;
 
 	@NotNull
-	private int codigo;
+	private Long estados_cod_estados;
 	
 	@NotEmpty(message = " Nome da cidade é obrigatório")
 	private String nome;
-	
-	@NotEmpty(message = " Código da cidade é obrigatório")
-	private String uf;
-	
-	/**
-	 * M�todo construtor da classe Cidade
-	 * Construtor vazio (utilizado para criar um objeto do tipo Cidade sem par�metros definidos)
-	 */
-	public Cidade() {
-		
-	}
-	
-	/**
-	 * M�todo construtor da classe Cidade (utilizado para criar um objeto do tipo Cidade com par�metros definidos)
-	 * @param id, id da cidade
-	 * @param codigo, codigo da cidade
-	 * @param nome, nome da cidade
-	 * @param uf, uni�o federativa da cidade
-	 */
-	
-	public Cidade(Cidade cidade) {
-		setId(cidade.getId());
-		setCodigo(cidade.getCodigo());
-		setNome(cidade.getNome());
-		setUf(cidade.getUf());
-	}
-	
-	public Cidade(Long id, int codigo, String nome, String uf) {
-		super();
-		this.id = id;
-		this.codigo = codigo;
+
+	@NotEmpty(message = " Cep da cidade é obrigatório")
+	private String cep;
+
+	public Cidade() {}
+
+	public Cidade(@NotNull Long estados_cod_estados, @NotEmpty(message = " Nome da cidade é obrigatório") String nome, @NotEmpty(message = " Cep da cidade é obrigatório") String cep) {
+		this.estados_cod_estados = estados_cod_estados;
 		this.nome = nome;
-		this.uf = uf;
+		this.cep = cep;
 	}
 
-	public Long getId() {
-		return id;
+	public Long getCod_cidades() {
+		return cod_cidades;
 	}
-	public void setId(Long id) {
-		this.id = id;
+
+	public void setCod_cidades(Long cod_cidades) {
+		this.cod_cidades = cod_cidades;
 	}
-	public int getCodigo() {
-		return codigo;
+
+	public Long getEstados_cod_estados() {
+		return estados_cod_estados;
 	}
-	public void setCodigo(int codigo) {
-		this.codigo = codigo;
+
+	public void setEstados_cod_estados(Long estados_cod_estados) {
+		this.estados_cod_estados = estados_cod_estados;
 	}
+
 	public String getNome() {
 		return nome;
 	}
+
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public String getUf() {
-		return uf;
+
+	public String getCep() {
+		return cep;
 	}
-	public void setUf(String uf) {
-		this.uf = uf;
+
+	public void setCep(String cep) {
+		this.cep = cep;
 	}
 
 	@Override
@@ -89,15 +73,16 @@ public class Cidade {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		Cidade cidade = (Cidade) o;
-		return codigo == cidade.codigo &&
-				Objects.equals(id, cidade.id) &&
+		return Objects.equals(cod_cidades, cidade.cod_cidades) &&
+				Objects.equals(estados_cod_estados, cidade.estados_cod_estados) &&
 				Objects.equals(nome, cidade.nome) &&
-				Objects.equals(uf, cidade.uf);
+				Objects.equals(cep, cidade.cep);
 	}
 
 	@Override
 	public int hashCode() {
 
-		return Objects.hash(id, codigo, nome, uf);
+		return Objects.hash(cod_cidades, estados_cod_estados, nome, cep);
 	}
+
 }

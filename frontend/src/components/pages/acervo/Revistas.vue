@@ -55,7 +55,9 @@
              id="table-listar"
     >
 
-      <template slot="area" slot-scope="row">{{row.value.nome}}</template>
+      <template slot="editora" slot-scope="row">{{ row.value.nome }}</template>
+
+      <template slot="data" slot-scope="row">{{ row.value | moment("DD/MM/YYYY") }}</template>
 
       <template slot="actions" slot-scope="row">
 

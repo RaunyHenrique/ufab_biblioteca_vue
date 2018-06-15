@@ -1,12 +1,10 @@
 package com.equipeRL.backend.Models.acervo;
 
-import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.sql.Date;
+import java.util.Objects;
 
 /**
  * Essa classe � utilizada como modelo para um objeto do tipo ItemAcervo.
@@ -24,7 +22,7 @@ public abstract class ItemAcervo {
 	private Long id;
 	
 	@NotNull(message=" Data é obrigatorio")
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
+//	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private  Date data;
 	
 	@NotNull(message=" Edicao é obrigatória")
@@ -64,5 +62,21 @@ public abstract class ItemAcervo {
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
 	}
-	
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ItemAcervo that = (ItemAcervo) o;
+		return edicao == that.edicao &&
+				Objects.equals(id, that.id) &&
+				Objects.equals(data, that.data) &&
+				Objects.equals(titulo, that.titulo);
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(id, data, edicao, titulo);
+	}
 }

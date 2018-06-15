@@ -7,7 +7,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * Classe utilizada como modelo para um objeto do tipo MidiasEletronicas.

@@ -8,6 +8,7 @@ import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,7 +16,7 @@ import java.util.Optional;
 @Service
 public class CidadeService implements ServiceInterface<Cidade> {
 
-	private static Logger logger = Logger.getLogger(JornalService.class);
+	private static Logger logger = Logger.getLogger(CidadeService.class);
 
 	@Autowired
 	private CidadesRepository cidadesRepository;

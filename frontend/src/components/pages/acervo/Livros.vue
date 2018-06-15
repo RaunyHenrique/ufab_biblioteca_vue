@@ -55,7 +55,13 @@
              id="table-listar"
     >
 
-      <template slot="area" slot-scope="row">{{row.value.nome}}</template>
+      <template slot="data" slot-scope="row">{{ row.value | moment("YYYY") }}</template>
+
+      <template slot="autores" slot-scope="row">
+
+        <b-badge pill variant="primary" v-for="(value, key) in row.value" :key="key">{{ value.nome }}</b-badge>
+
+      </template>
 
       <template slot="actions" slot-scope="row">
 
@@ -165,7 +171,7 @@
           //OBS: os campos que não estão presentes aqui, são os campos personalizados!
           { key: 'id', label: 'Id', type: 'number', hidden: true},
           { key: 'titulo', label: 'Titulo', type: 'text'},
-          { key: 'isbn', label: 'Isbn', type: 'text' },
+          { key: 'isbn', label: 'Isbn', type: 'number' },
           { key: 'numero_paginas', label: 'Numero de paginas', type: 'number'},
           { key: 'edicao', label: 'Edição', type: 'number'},
           { key: 'data', label: 'Ano de publicação', type: 'date'},
@@ -175,9 +181,12 @@
           { key: 'isbn', label: 'Isbn', sortable: true },
           { key: 'numero_paginas', label: 'Numero de paginas', sortable: true },
           { key: 'data', label: 'Ano de publicação', sortable: true },
+          { key: 'autores', label: 'Autores', sortable: true },
           { key: 'actions', label: 'Ações' }
         ],
-        form: {},//todos os campos do form
+        form: {
+          autores: []
+        },//todos os campos do form
         currentPage: 1,
         perPage: 5,
         totalRows: 0,
@@ -337,7 +346,13 @@
 
         var campos = {}
         Object.keys(data).forEach(function (key) {
-          campos[key] = null
+
+          if (key == "autores") {
+            campos[key] = []
+          } else {
+            campos[key] = null
+          }
+
         })
 
         this.form = campos
@@ -347,7 +362,9 @@
 
         if (item == null) {
           this.modalTitle = 'Cadastrar'
-          this.form = {}
+          this.form = {
+            autores: []
+          }
           this.method = 'post'
         } else {
 
@@ -363,9 +380,28 @@
           this.indexToEdit = index
 
           //seta o valor do id do curso no select de curso (pois curso vem como obj não compativel com o select)
-          if (item['area'].hasOwnProperty("id")) {
+          if (item.hasOwnProperty("autores")) {
 
-            this.form.area = item['area']['id']
+            var autores = []
+            item['autores'].forEach(function (obj) {
+
+              autores.push(obj['id'])
+
+            })
+
+            this.form.autores = autores
+
+          }
+
+          if (item['editora'].hasOwnProperty("id")) {
+
+            this.form.editora = item['editora']['id']
+
+          }
+
+          if (item['tema'].hasOwnProperty("id")) {
+
+            this.form.tema = item['tema']['id']
 
           }
 
@@ -501,11 +537,11 @@
         var errs = []
         erros.forEach(function (erro) {
 
-          if (erro['code'] != "NotNull") {
+          // if (erro['code'] != "NotNull") {
 
             errs.push(erro['defaultMessage'])
 
-          }
+          // }
 
         })
 
@@ -513,7 +549,9 @@
 
       },
       resetModal () {
-        this.form = {}
+        this.form = {
+          autores: []
+        }
       },
       handleSubmit () {
         //fecha modal
@@ -543,5 +581,8 @@
   #btn-cadastrar {
     float: right;
     margin-bottom: 12px;
+  }
+  .badge-primary {
+    margin-right: 8px;
   }
 </style>

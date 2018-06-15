@@ -55,7 +55,15 @@
              id="table-listar"
     >
 
-      <template slot="area" slot-scope="row">{{row.value.nome}}</template>
+      <template slot="data" slot-scope="row">{{ row.value | moment("YYYY") }}</template>
+
+      <template slot="autores" slot-scope="row">
+
+        <b-badge pill variant="primary" v-for="(value, key) in row.value" :key="key">{{ value.nome }}</b-badge>
+
+      </template>
+
+      <template slot="local" slot-scope="row">{{row.value.nome}}</template>
 
       <template slot="actions" slot-scope="row">
 
@@ -173,7 +181,10 @@
           { key: 'local', label: 'Local', sortable: true },
           { key: 'actions', label: 'Ações' }
         ],
-        form: {},//todos os campos do form
+        form: {
+          autores: [],
+          local: []
+        },//todos os campos do form
         currentPage: 1,
         perPage: 5,
         totalRows: 0,
@@ -297,7 +308,7 @@
               var cidades = []
               data.data.forEach(function (obj) {
 
-                cidades.push({text: obj['nome'], value: obj['id'], disabled: false})
+                cidades.push({text: obj['nome'], value: obj['cod_cidades'], disabled: false})
 
               })
 
@@ -324,7 +335,13 @@
 
         var campos = {}
         Object.keys(data).forEach(function (key) {
-          campos[key] = null
+
+          if (key == "autores") {
+            campos[key] = []
+          } else {
+            campos[key] = null
+          }
+
         })
 
         this.form = campos
@@ -334,7 +351,10 @@
 
         if (item == null) {
           this.modalTitle = 'Cadastrar'
-          this.form = {}
+          this.form = {
+            autores: [],
+            local: []
+          }
           this.method = 'post'
         } else {
 
@@ -349,12 +369,24 @@
           this.method = 'put'
           this.indexToEdit = index
 
-          //seta o valor do id do curso no select de curso (pois curso vem como obj não compativel com o select)
-          // if (item['area'].hasOwnProperty("id")) {
-          //
-          //   this.form.area = item['area']['id']
-          //
-          // }
+          if (item.hasOwnProperty("autores")) {
+
+            var autores = []
+            item['autores'].forEach(function (obj) {
+
+              autores.push(obj['id'])
+
+            })
+
+            this.form.autores = autores
+
+          }
+
+          if (item['local'].hasOwnProperty("cod_cidades")) {
+
+            this.form.local = item['local']['cod_cidades']
+
+          }
 
         }
 
@@ -500,7 +532,9 @@
 
       },
       resetModal () {
-        this.form = {}
+        this.form = {
+          autores: []
+        }
       },
       handleSubmit () {
         //fecha modal

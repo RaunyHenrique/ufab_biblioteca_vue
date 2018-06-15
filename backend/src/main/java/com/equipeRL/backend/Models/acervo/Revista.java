@@ -4,7 +4,7 @@ import com.equipeRL.backend.Models.Editora;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * Classe  utilizada como modelo para um objeto do tipo Revista.

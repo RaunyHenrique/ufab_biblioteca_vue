@@ -9,6 +9,7 @@ import com.equipeRL.backend.Models.acervo.Livro;
 import com.equipeRL.backend.Services.acervo.LivroService;
 import com.equipeRL.backend.Services.exceptions.CustomErrorType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -180,8 +183,10 @@ public class LivrosController implements ControllerCRUDInterface<Livro> {
 	 */
     @InitBinder
     public void initBinder(WebDataBinder binder) {
+        CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
         binder.registerCustomEditor(Editora.class, editoraPropertyEditor);
         binder.registerCustomEditor(Tema.class, temaPropertyEditor);
+        binder.registerCustomEditor(Date.class, editor);
     }
 
     

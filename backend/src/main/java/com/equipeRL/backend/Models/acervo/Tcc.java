@@ -7,7 +7,7 @@ import com.equipeRL.backend.Models.enums.Tipo_tcc;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * Essa classe utilizada como modelo para um objeto do tipo Tcc.
@@ -35,23 +35,10 @@ public class Tcc extends ItemAcervo {
 	private Tipo_tcc tipo;
 
 	@ManyToOne(cascade=CascadeType.REFRESH)
-	@JoinColumn(name = "cidade_id",nullable=false)
+	@JoinColumn(name = "cod_cidades",nullable=false)
 	@NotNull(message=" Cidade é obrigatorio")
 	private Cidade cidade;
-	
-	/**
-	 * Método construtor da classe Tcc
-	 * Construtor vazio (utilizado para criar um objeto do tipo Tcc sem parametros definidos)
-	 */
-	public Tcc(Tcc tcc) {
-		setId(tcc.getId());
-		setTitulo(tcc.getTitulo());
-		setAutor(new Autor(tcc.getAutor()));
-		setOrientador(new Orientador(tcc.getOrientador()));
-		setTipo(tcc.getTipo());
-		setAno_defesa(tcc.getAno_defesa());
-		setCidade(new Cidade(tcc.getCidade()));
-	}
+
 	/**
 	 * Método construtor da classe Tcc (utilizado para criar um objeto do tipo Tcc com parametros definidos)
 	 * @param id id do tcc

@@ -325,6 +325,8 @@
       },
       showModal(title, item, index, event) {
 
+        console.log(item)
+
         if (item == null) {
           this.modalTitle = 'Cadastrar'
           this.form = {}

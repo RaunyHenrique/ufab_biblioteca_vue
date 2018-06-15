@@ -80,7 +80,7 @@ public class CidadesController implements ControllerCRUDInterface<Cidade> {
             cidadeService.save(model);
 
             HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(ucBuilder.path("/api/cidades/{id}").buildAndExpand(model.getId()).toUri());
+            headers.setLocation(ucBuilder.path("/api/cidades/{id}").buildAndExpand(model.getCod_cidades()).toUri());
 
             return new ResponseEntity<>(model, headers, HttpStatus.CREATED);
 

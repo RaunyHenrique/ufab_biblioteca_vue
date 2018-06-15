@@ -54,6 +54,38 @@ public class CidadesController implements ControllerCRUDInterface<Cidade> {
     }
 
     /**
+     * Retorna uma lista com todos as cidades de acordo com a busca
+     *
+     * @return List<Cidade> cidades
+     * @author Luis Lancellote
+     * @author Rauny Henrique
+     */
+    @GetMapping("/buscar/{cidade}")
+    public ResponseEntity<List<Cidade>> buscarCidade(@PathVariable("cidade") String cidade) {
+
+        try {
+
+            if (!cidade.isEmpty()) {
+
+                List<Cidade> cidades = cidadeService.buscar(cidade);
+
+                return new ResponseEntity<>(cidades, HttpStatus.OK);
+
+            } else {
+
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+
+            }
+
+        }catch (Exception e) {
+
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+
+        }
+
+    }
+
+    /**
 	 * Valida e cadastra um objeto tipo Cidade recebido como parâmetro
 	 * 
 	 * @param Cidade model

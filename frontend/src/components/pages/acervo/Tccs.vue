@@ -130,6 +130,7 @@
                          name="cidade"
                          :options="cidades"
                          required
+                         @change="buscarCidade"
                          v-model="form.cidade">
             <template slot="first">
               <option :value="null">Selecione...</option>
@@ -207,7 +208,7 @@
       this.getAllAutores()
       this.getAllOrientadores()
       this.getAllTiposDeTccs()
-      this.getAllCidades()
+      // this.getAllCidades()
     },
     methods: {
 
@@ -332,9 +333,9 @@
           })
 
       },
-      getAllCidades () {
+      buscarCidade (evt) {
 
-        this.$http.get('/cidades')
+        this.$http.get('/cidades/buscar/' + evt)
           .then(data => {
 
             if (data.data.length > 0) {

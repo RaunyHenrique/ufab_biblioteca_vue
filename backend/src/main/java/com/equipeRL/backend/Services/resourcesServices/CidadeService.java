@@ -31,6 +31,16 @@ public class CidadeService implements ServiceInterface<Cidade> {
 
     }
 
+    public List<Cidade> buscar(String cidade) {
+
+        List<Cidade> cidades = cidadesRepository.findByNomeLike(cidade);
+
+        logger.info("Itens listados com sucesso!");
+
+        return cidades;
+
+    }
+
     public boolean isExist(Cidade model) {
 
         Optional<Cidade> findCidade = cidadesRepository.findByNomeIgnoreCase(model.getNome());

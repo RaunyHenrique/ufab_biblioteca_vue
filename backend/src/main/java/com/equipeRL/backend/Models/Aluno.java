@@ -75,12 +75,11 @@ public class Aluno {
 	 */
 	public Aluno() {}
 
-	public Aluno(@NotNull @NotEmpty String rg, @NotNull @NotEmpty String cpf, @NotNull @NotEmpty String naturalidade, @NotNull @NotEmpty String nome, String matricula, @NotEmpty(message = " Nome da mãe é obrigatório") String nomeMae, @NotNull @NotEmpty String endereco, @NotNull @NotEmpty String telefone, @NotNull(message = " Curso é obrigatório") Curso curso, @NotNull(message = " Nivel do aluno é obrigatório") Tipo_nivel nivel, @NotNull(message = " Data de ingresso é obrigatório") Date anoIngresso, @NotNull(message = " Periodo de ingresso é obrigatório") int periodoIngresso) {
+	public Aluno(@NotNull @NotEmpty String rg, @NotNull @NotEmpty String cpf, @NotNull @NotEmpty String naturalidade, @NotNull @NotEmpty String nome, @NotEmpty(message = " Nome da mãe é obrigatório") String nomeMae, @NotNull @NotEmpty String endereco, @NotNull @NotEmpty String telefone, @NotNull(message = " Curso é obrigatório") Curso curso, @NotNull(message = " Nivel do aluno é obrigatório") Tipo_nivel nivel, @NotNull(message = " Data de ingresso é obrigatório") Date anoIngresso, @NotNull(message = " Periodo de ingresso é obrigatório") int periodoIngresso) {
 		this.rg = rg;
 		this.cpf = cpf;
 		this.naturalidade = naturalidade;
 		this.nome = nome;
-		this.matricula = matricula;
 		this.nomeMae = nomeMae;
 		this.endereco = endereco;
 		this.telefone = telefone;
@@ -88,6 +87,7 @@ public class Aluno {
 		this.nivel = nivel;
 		this.anoIngresso = anoIngresso;
 		this.periodoIngresso = periodoIngresso;
+		this.gerarMatricula();
 	}
 
 	public Long getId() {

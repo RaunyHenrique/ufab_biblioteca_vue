@@ -85,3 +85,8 @@ OBS: http://localhost:8080/api/* é o endereço default para todas as requests n
 
 É isso, agora você tem acesso a todas as rotas http://localhost:8080/api/* para seu frontend.
 
+## Testes unitarios
+
+* Para realizar a execução dos testes unitarios, você precisa fornecer um token de autenticação válido no arquivo DefaultTest;
+
+* Para obter um token de autenticação válido, faça login pela url: http://localhost:8080/api/login passando seu username e password de usuário.

@@ -1,5 +1,6 @@
 package com.equipeRL.backend.Controllers.acervo;
 
+import com.equipeRL.backend.Controllers.TestControllerInterface;
 import com.equipeRL.backend.DefaultTest;
 import com.equipeRL.backend.Models.acervo.Revista;
 
@@ -8,7 +9,7 @@ import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
 
-public class CursoControllerTest extends DefaultTest implements TestControllerInterface {
+public class RevistaControllerTest extends DefaultTest implements TestControllerInterface {
 
     @Test
     public void listAll() {

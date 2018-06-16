@@ -126,16 +126,25 @@
 
         <b-form-group label="Cidade"
                       label-for="cidade">
-          <b-form-select id="cidade"
-                         name="cidade"
-                         :options="cidades"
-                         required
-                         @change="buscarCidade"
-                         v-model="form.cidade">
-            <template slot="first">
-              <option :value="null">Selecione...</option>
-            </template>
-          </b-form-select>
+
+          <multiselect
+            id="cidade"
+            label="nome"
+            track-by="cod_cidades"
+            :options-limit="50"
+            :searchable="true"
+            :loading="isLoading"
+            @search-change="buscarCidade"
+            placeholder="Buscar..."
+            :allowEmpty="false"
+            required
+            v-model="form.cidade"
+            :options="cidades">
+
+            <span slot="noResult">Ops! Nenhuma cidade encontrada.</span>
+
+          </multiselect>
+
         </b-form-group>
 
       </template>
@@ -159,7 +168,9 @@
 
   export default {
     name: "Tccs",
-    components: { FormModal },
+    components: {
+      FormModal,
+    },
     data () {
       return {
         title: 'Tccs',
@@ -196,6 +207,7 @@
         orientadores: [],
         tipos: [],
         cidades: [],
+        isLoading: false,
 
         idToDelete: null,
         indexToDelete: null,
@@ -208,7 +220,6 @@
       this.getAllAutores()
       this.getAllOrientadores()
       this.getAllTiposDeTccs()
-      // this.getAllCidades()
     },
     methods: {
 
@@ -333,37 +344,41 @@
           })
 
       },
-      buscarCidade (evt) {
+      buscarCidade (query) {
 
-        this.$http.get('/cidades/buscar/' + evt)
-          .then(data => {
+        console.log(query)
 
-            if (data.data.length > 0) {
+        if (query !== "") {
 
-              var cidades = []
-              data.data.forEach(function (obj) {
+          this.isLoading = true
 
-                cidades.push({text: obj['nome'], value: obj['cod_cidades'], disabled: false})
+          this.$http.get('/cidades/buscar/' + query)
+            .then(data => {
 
-              })
+              if (data.data.length > 0) {
 
-              this.cidades = cidades
+                this.cidades = data.data
 
-            }
+              }
 
-          })
-          .catch((error) => {
-            console.log(error)
-            this.$toast.error({
-              title: 'Informação',
-              message: 'Ops, ocorreu algum erro',
-              position: 'top right',
-              progressBar: true,
-              showDuration: 1000,
-              hideDuration: 1000,
-              timeOut: 5000
+              this.isLoading = false
+
             })
-          })
+            .catch((error) => {
+              this.isLoading = false
+              console.log(error)
+              this.$toast.error({
+                title: 'Informação',
+                message: 'Ops, ocorreu algum erro',
+                position: 'top right',
+                progressBar: true,
+                showDuration: 1000,
+                hideDuration: 1000,
+                timeOut: 5000
+              })
+            })
+
+        }
 
       },
       setFormFields(data) {//precisa desse metd. msm:?????
@@ -377,6 +392,9 @@
 
       },
       showModal(title, item, index, event) {
+
+        this.isLoading = false
+        this.error = false
 
         if (item == null) {
           this.modalTitle = 'Cadastrar'
@@ -395,7 +413,7 @@
           this.method = 'put'
           this.indexToEdit = index
 
-          //seta o valor do id do curso no select de curso (pois curso vem como obj não compativel com o select)
+          //seta o objetos compativeis com select
           if (item['autor'].hasOwnProperty("id")) {
 
             this.form.autor = item['autor']['id']
@@ -408,9 +426,9 @@
 
           }
 
-          if (item['cidade'].hasOwnProperty("cod_cidades")) {
+          if (item.hasOwnProperty("cidade")) {
 
-            this.form.cidade = item['cidade']['cod_cidades']
+            this.form.cidade = item['cidade']
 
           }
 
@@ -475,6 +493,11 @@
       submitForm (formModal) {
 
         var qs = require('qs');
+
+        //troca obj por id da cidade
+        if (formModal.hasOwnProperty("cidade")) {
+          formModal["cidade"] = formModal["cidade"]['cod_cidades']
+        }
 
         if (this.method == 'post') {
 
@@ -546,11 +569,11 @@
         var errs = []
         erros.forEach(function (erro) {
 
-          if (erro['code'] != "NotNull") {
+          // if (erro['code'] != "NotNull") {
 
             errs.push(erro['defaultMessage'])
 
-          }
+          // }
 
         })
 
@@ -568,6 +591,8 @@
     },
   }
 </script>
+
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style scoped>
   #table-listar {

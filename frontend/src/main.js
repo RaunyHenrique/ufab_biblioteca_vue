@@ -10,6 +10,7 @@ import BootstrapVue from 'bootstrap-vue'
 import Vuelidate from 'vuelidate'
 import VueMoment from 'vue-moment'
 import CxltToastr from 'cxlt-vue2-toastr'
+import Multiselect from 'vue-multiselect'
 
 Vue.config.productionTip = false
 Vue.config.devtools = true
@@ -29,6 +30,8 @@ Vue.use(VueMoment)
 
 Vue.use(CxltToastr)
 import 'cxlt-vue2-toastr/dist/css/cxlt-vue2-toastr.css'
+
+Vue.component('multiselect', Multiselect)
 
 new Vue({
   el: '#app',

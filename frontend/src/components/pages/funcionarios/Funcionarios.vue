@@ -245,6 +245,8 @@
       },
       showModal(title, item, index, event) {
 
+        this.error = false
+
         if (item == null) {
 
           this.modalTitle = 'Cadastrar'

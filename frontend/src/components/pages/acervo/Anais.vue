@@ -122,15 +122,25 @@
 
         <b-form-group label="Cidade"
                       label-for="cidade">
-          <b-form-select id="cidade"
-                         name="cidade"
-                         :options="cidades"
-                         required
-                         v-model="form.local">
-            <template slot="first">
-              <option :value="null">Selecione...</option>
-            </template>
-          </b-form-select>
+
+          <multiselect
+            id="cidade"
+            label="nome"
+            track-by="cod_cidades"
+            :options-limit="50"
+            :searchable="true"
+            :loading="isLoading"
+            @search-change="buscarCidade"
+            placeholder="Buscar..."
+            :allowEmpty="false"
+            required
+            v-model="form.local"
+            :options="cidades">
+
+            <span slot="noResult">Ops! Nenhuma cidade encontrada.</span>
+
+          </multiselect>
+
         </b-form-group>
 
       </template>
@@ -196,6 +206,7 @@
         tipos: [],
         autores: [],
         cidades: [],
+        isLoading: false,
 
         idToDelete: null,
         indexToDelete: null,
@@ -207,7 +218,6 @@
       this.getAllAnais()
       this.getAllTiposDeAnais()
       this.getAllAutores()
-      this.getAllCidades()
     },
     methods: {
       getAllAnais() {
@@ -298,37 +308,41 @@
           })
 
       },
-      getAllCidades () {
+      buscarCidade (query) {
 
-        this.$http.get('/cidades')
-          .then(data => {
+        console.log(query)
 
-            if (data.data.length > 0) {
+        if (query !== "") {
 
-              var cidades = []
-              data.data.forEach(function (obj) {
+          this.isLoading = true
 
-                cidades.push({text: obj['nome'], value: obj['cod_cidades'], disabled: false})
+          this.$http.get('/cidades/buscar/' + query)
+            .then(data => {
 
-              })
+              if (data.data.length > 0) {
 
-              this.cidades = cidades
+                this.cidades = data.data
 
-            }
+              }
 
-          })
-          .catch((error) => {
-            console.log(error)
-            this.$toast.error({
-              title: 'Informação',
-              message: 'Ops, ocorreu algum erro',
-              position: 'top right',
-              progressBar: true,
-              showDuration: 1000,
-              hideDuration: 1000,
-              timeOut: 5000
+              this.isLoading = false
+
             })
-          })
+            .catch((error) => {
+              this.isLoading = false
+              console.log(error)
+              this.$toast.error({
+                title: 'Informação',
+                message: 'Ops, ocorreu algum erro',
+                position: 'top right',
+                progressBar: true,
+                showDuration: 1000,
+                hideDuration: 1000,
+                timeOut: 5000
+              })
+            })
+
+        }
 
       },
       setFormFields(data) {//precisa desse metd. msm:?????
@@ -348,6 +362,9 @@
 
       },
       showModal(title, item, index, event) {
+
+        this.isLoading = false
+        this.error = false
 
         if (item == null) {
           this.modalTitle = 'Cadastrar'
@@ -382,9 +399,9 @@
 
           }
 
-          if (item['local'].hasOwnProperty("cod_cidades")) {
+          if (item.hasOwnProperty("local")) {
 
-            this.form.local = item['local']['cod_cidades']
+            this.form.local = item['local']
 
           }
 
@@ -449,6 +466,11 @@
       submitForm (formModal) {
 
         var qs = require('qs');
+
+        //troca obj por id do local
+        if (formModal.hasOwnProperty("local")) {
+          formModal["local"] = formModal["local"]['cod_cidades']
+        }
 
         if (this.method == 'post') {
 
@@ -520,11 +542,11 @@
         var errs = []
         erros.forEach(function (erro) {
 
-          if (erro['code'] != "NotNull") {
+          // if (erro['code'] != "NotNull") {
 
             errs.push(erro['defaultMessage'])
 
-          }
+          // }
 
         })
 

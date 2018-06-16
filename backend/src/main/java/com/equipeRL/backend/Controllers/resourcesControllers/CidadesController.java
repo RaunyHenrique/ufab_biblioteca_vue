@@ -69,7 +69,11 @@ public class CidadesController implements ControllerCRUDInterface<Cidade> {
 
                 List<Cidade> cidades = cidadeService.buscar(cidade);
 
-                return new ResponseEntity<>(cidades, HttpStatus.OK);
+                if (cidades.size() > 0) {
+                    return new ResponseEntity<>(cidades, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(cidades, HttpStatus.NO_CONTENT);
+                }
 
             } else {
 
